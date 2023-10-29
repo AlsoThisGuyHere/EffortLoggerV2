@@ -21,6 +21,8 @@ public class SignupPage {
 	
 	private ASUHelloWorldJavaFX main = new ASUHelloWorldJavaFX();
 	
+	private ReadWrite readWrite = new ReadWrite("src\\sample.txt");
+	
 	public void createSignUpPage(Stage primaryStage, List<User> users) {
     	GridPane gridPane = new GridPane();
     	
@@ -88,7 +90,7 @@ public class SignupPage {
 				}
 				else {
 					users.add(user);
-					printUser(users);
+					readWrite.append(user.getFirstName() + " " + user.getLastName() + " " + user.getRole() + " " + user.getUsername() + " " + user.getPassword(), true);
 					main.login(primaryStage, users);
 				}
 			}
@@ -126,7 +128,6 @@ public class SignupPage {
     }
 	
 	private boolean regexChecker(String regex, String value) {
-		System.out.println("Some: " + Pattern.matches(regex, value));
 		return Pattern.matches(regex, value);
 	}
 	

@@ -32,7 +32,7 @@ public class ASUHelloWorldJavaFX extends Application {
     }
 	
 	public void start(Stage primaryStage) {
-		login(primaryStage, new ArrayList<User>());
+		login(primaryStage, getUsersFromFile());
 	}
     
     public void login(Stage primaryStage, List<User> signedUpUsers) {
@@ -107,5 +107,20 @@ public class ASUHelloWorldJavaFX extends Application {
     	return users.stream()
     			.filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password))
     			.findFirst();
+    }
+    
+    private List<User> getUsersFromFile() {
+    	List<User> users = new ArrayList<User>();
+    	ReadWrite readWrite = new ReadWrite("src\\sample.txt");
+    	String readData = readWrite.read();
+    	String[] stringUsers = readData.split("\n");
+    	for (int i = 0; i< stringUsers.length; i++) {
+    		System.out.println(stringUsers[i]);
+    		String[] splitUserDetails = stringUsers[i].split(" ");
+    		if (splitUserDetails.length != 5) continue;
+    		users.add(new User(splitUserDetails[0], splitUserDetails[1], splitUserDetails[2], splitUserDetails[3], splitUserDetails[4]));
+    	}
+//    	return readWrite.read();
+    	return users;
     }
 }
