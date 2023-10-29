@@ -60,7 +60,6 @@ public final class ReadWrite {
 			
 		} catch (Exception e) {
 			System.out.println("ERROR IN READING FILE");
-			e.printStackTrace();
 			return null;
 		}
 	}

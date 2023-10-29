@@ -113,14 +113,16 @@ public class ASUHelloWorldJavaFX extends Application {
     	List<User> users = new ArrayList<User>();
     	ReadWrite readWrite = new ReadWrite("src\\sample.txt");
     	String readData = readWrite.read();
+    	if (readData == null) {
+    		return new ArrayList<User>();
+    	}
     	String[] stringUsers = readData.split("\n");
     	for (int i = 0; i< stringUsers.length; i++) {
     		System.out.println(stringUsers[i]);
     		String[] splitUserDetails = stringUsers[i].split(" ");
     		if (splitUserDetails.length != 5) continue;
-    		users.add(new User(splitUserDetails[0], splitUserDetails[1], splitUserDetails[2], splitUserDetails[3], splitUserDetails[4]));
+    		users.add(new User(splitUserDetails[0], splitUserDetails[1], splitUserDetails[2], splitUserDetails[3], splitUserDetails[4], splitUserDetails[5], splitUserDetails[6], splitUserDetails[7]));
     	}
-//    	return readWrite.read();
     	return users;
     }
 }
