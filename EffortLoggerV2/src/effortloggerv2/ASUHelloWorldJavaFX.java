@@ -7,7 +7,9 @@ import java.util.Optional;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -16,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
  
@@ -33,8 +36,20 @@ public class ASUHelloWorldJavaFX extends Application {
 	
 	public void start(Stage primaryStage) {
 		login(primaryStage, getUsersFromFile(), new ArrayList<Task>());
+		/*try {
+			//BorderPane root = new BorderPane();
+			//Group root = new Group();
+			Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
+			Scene scene = new Scene(root,1280,720,Color.BLANCHEDALMOND);
+			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}*/
 	}
     
+	
     public void login(Stage primaryStage, List<User> signedUpUsers, List<Task> tasks) {
     	System.out.println(signedUpUsers.size());
     	System.out.println(tasks.size());
@@ -71,6 +86,7 @@ public class ASUHelloWorldJavaFX extends Application {
 					loggedInUser = user;
 					loggedInUser.setIsLoggedIn(Boolean.TRUE);
 					taskPage.createPlanningPokerPage(primaryStage, true, signedUpUsers, user, tasks);
+					
 				}
             }
         });

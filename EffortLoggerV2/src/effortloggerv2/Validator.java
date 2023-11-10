@@ -1,5 +1,12 @@
 package effortloggerv2;
 
+/*******
+ * <p> Title: Validator_Main Class </p>
+ * <p>This class is defines a validator to verify that text fields meet the input requirements.</p>
+ * 
+ * @author Cody Nijdl
+ * 
+ * */
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
