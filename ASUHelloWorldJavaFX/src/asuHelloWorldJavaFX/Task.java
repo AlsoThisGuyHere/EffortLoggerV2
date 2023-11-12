@@ -26,4 +26,8 @@ public class Task {
 		this.setTask(task);
 		this.setEstimates(estimates);
 	}
+	
+	public String toString() {
+		return "Task title: " + this.getTask() + " Estimates: " + this.getEstimates();
+	}
 }

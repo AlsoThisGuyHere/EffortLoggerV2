@@ -27,6 +27,8 @@ public class TaskPage {
 	
 	private AddTaskPage addTaskPage;
 	
+	private PlanningPokerPage planningPokerPage;
+	
 	private Task task;
 	
 	private User user;
@@ -47,6 +49,7 @@ public class TaskPage {
 			User loggedInUser,
 			List<Task> tasks) {
 		addTaskPage = new AddTaskPage();
+		planningPokerPage = new PlanningPokerPage();
     	GridPane gridPane = new GridPane();
     	user = loggedInUser;
     	
@@ -74,9 +77,8 @@ public class TaskPage {
             text.setText("Sample");
             
             Button deleteButton = new Button("Delete Task");
-            Button deleteButtonWithoutAuthorizarion = new Button("Delete Task without Authorization");
+            Button planningPokerButton = new Button("Planning Poker Button");
             Button addButton = new Button("Add Task");
-            Button addTaskWithoutAuthorization = new Button("Add Task without Authorization");
             Button logoutButton = new Button("Logout");
             
             List<String> stringTasks = new ArrayList<String>();
@@ -119,25 +121,19 @@ public class TaskPage {
     			}
     		});
             
-            deleteButtonWithoutAuthorizarion.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent actionEvent) {
-					deleteTask(primaryStage, alert, false, user, users, tasks);
-				}
-			});
-            
-            addTaskWithoutAuthorization.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent actionEvent) {
-					addTaskPage.addTaskPage(primaryStage, users, tasks, false, user);
-				}
-			});
-            
             logoutButton.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent arg0) {					
 					user = null;
 					main.login(primaryStage, users, tasks);
+				}
+			});
+            
+            planningPokerButton.setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent actionEvent) {
+					planningPokerPage.createPlanningPokerPage(primaryStage);
 				}
 			});
         	
@@ -147,11 +143,9 @@ public class TaskPage {
         	
         	gridPane.addRow(0, username, text);
         	gridPane.addRow(1, listView);
-        	gridPane.addRow(2, deleteButtonWithoutAuthorizarion);
-        	gridPane.addRow(3, addTaskWithoutAuthorization);
+        	gridPane.addRow(2, planningPokerButton);
         	gridPane.addRow(4, addButton, deleteButton);
         	gridPane.addRow(5, logoutButton);
-//        	gridPane.addRow(1, rectangle);
         	
         	primaryStage.setScene(new Scene(gridPane, 400, 400));
         	primaryStage.show();
