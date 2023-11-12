@@ -53,7 +53,7 @@ public class TestDriver {
 		}
 		
 		File savePath = new File("C:\\Users\\Emil\\Downloads");
-		ExcelController.save(savePath, "Business Project", effortArray, defectArray);
+		ExcelController.write(savePath, "Business Project", effortArray, defectArray);
 		
 		File excelToRead = new File("C:\\Users\\Emil\\Downloads\\Business Project.xlsx");
 		

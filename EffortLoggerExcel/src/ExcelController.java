@@ -89,7 +89,7 @@ public class ExcelController {
 	}
 	
 	// Saves an excel containing the Effort Log and Defect Log information given to it
-	public static void save(File directory, String fileName, EffortLog[] effortLogs, DefectLog[] defectLogs)
+	public static void write(File directory, String fileName, EffortLog[] effortLogs, DefectLog[] defectLogs)
 	{
 		try
 		{
