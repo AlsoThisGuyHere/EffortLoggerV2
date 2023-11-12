@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 
 public class SignupPage {
 	
-	private ASUHelloWorldJavaFX main = new ASUHelloWorldJavaFX();
+	private MainLoginPage main = new MainLoginPage();
 	
 	private ReadWrite readWrite = new ReadWrite("src\\sample.txt");
 	
@@ -122,7 +122,7 @@ public class SignupPage {
     	gridPane.addRow(6, nextButton, loginButton);
     	gridPane.setAlignment(Pos.CENTER);
     	
-    	primaryStage.setScene(new Scene(gridPane, 400, 400));
+    	primaryStage.setScene(new Scene(gridPane, 1280, 720));
     	primaryStage.show();
     }
 	
@@ -242,7 +242,7 @@ public class SignupPage {
 		gridPane.addRow(10, loginButton);
 		gridPane.setAlignment(Pos.CENTER);
 		
-		primaryStage.setScene(new Scene(gridPane, 400, 400));
+		primaryStage.setScene(new Scene(gridPane, 1280, 720));
     	primaryStage.show();
 	}
 }

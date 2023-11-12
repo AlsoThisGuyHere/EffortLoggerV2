@@ -31,7 +31,7 @@ public class TaskPage {
 	
 	private User user;
 	
-	private ASUHelloWorldJavaFX main = new ASUHelloWorldJavaFX();
+	private MainLoginPage main = new MainLoginPage();
 	
 	public void createPlanningPokerPage(Stage primaryStage,
 			boolean authenticationCheck,
