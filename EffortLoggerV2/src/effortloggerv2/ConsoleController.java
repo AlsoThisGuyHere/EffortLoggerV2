@@ -1,7 +1,10 @@
 package effortloggerv2;
 
 import FXDirectoryExcel.*;
+import forLater.ExcelCreator;
+
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +29,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
-import org.apache.poi.ss.usermodel.Cell;		// not sure if I will need ALL of these (or ANY)
+/*import org.apache.poi.ss.usermodel.Cell;		// not sure if I will need ALL of these (or ANY)
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;*/
 
 public class ConsoleController implements Initializable{
 	
@@ -42,7 +45,6 @@ public class ConsoleController implements Initializable{
 	
 	// file stuff
 	private File projFile;
-	// DirectoryChooser dirChooser;			// no longer needed
 	FileChooser fileChooser;
 	
 	Alert alert = new Alert(AlertType.ERROR);
@@ -71,12 +73,13 @@ public class ConsoleController implements Initializable{
 	@FXML
 	private Button stopActivity;
 	
-	//private List<String> projInfo;
-	private Workbook workbook;
+	private List<EffortLog> projInfo;
+	private EffortLog currLog;
+	/*private Workbook workbook;
 	private Sheet sheet;
 	private Row row;
 	private int cellNum = 0;
-	private Cell cell;
+	private Cell cell;*/
 	
 	// need to save whether the clock is running on the excel sheet (maybe if Stop field of most recent task is "", then clockIsRunning = true)
 	private boolean clockIsRunning = false;
@@ -113,13 +116,17 @@ public class ConsoleController implements Initializable{
 			alert.show();
 		} else {
 			System.out.println("Start Time: " + java.time.LocalTime.now());
-			
-			List<String> projInfo = new ArrayList<String>();
+			//currLog.setNumber(projInfo.size() + 2);
+			currLog = new EffortLog(projInfo.size() + 1, java.time.LocalDate.now().toString(), java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss")).toString(),
+					"", -1, lifecycleStep.getValue(), effortCategory.getValue(), projNameField.getText());  // try "" instead of null
+			projInfo.add(currLog);
+			ExcelController.write(projFile, projInfo, new ArrayList<DefectLog>());
+			/*List<EffortLog> projInfo = new ArrayList<String>();
 			projInfo.add(java.time.LocalTime.now().toString());
 			projInfo.add(lifecycleStep.getValue());
 			projInfo.add(effortCategory.getValue());
 			projInfo.add(projNameField.getText());
-			System.out.println(projInfo.toString());
+			System.out.println(projInfo.toString());*/
 			clockIsRunning = true;
 		}
 	}
@@ -131,6 +138,8 @@ public class ConsoleController implements Initializable{
 			alert.show();
 		} else {
 			System.out.println("Stop Time: " + java.time.LocalTime.now());
+			currLog.setStop(java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss")).toString());
+			ExcelController.write(projFile, projInfo, new ArrayList<DefectLog>());
 			clockIsRunning = false;
 		}
 	}
@@ -177,20 +186,35 @@ public class ConsoleController implements Initializable{
 		fileChooser.getExtensionFilters().addAll(
   		         new ExtensionFilter("Worksheets", "*.xlsx", "*.xlsm", "*.xlsb", "*.xls")
   		         );
-       	fileChooser.setInitialFileName("Book1.xlsx");
+       	fileChooser.setInitialFileName("Project1.xlsx");
 		projFile = fileChooser.showSaveDialog(primaryStage);
 		if (projFile == null) {
 			System.out.println("No file was chosen by user.");
-		} else {ExcelCreator.createExcel(projFile);}
+		} else {
+			//ExcelCreator.createExcel(projFile);
+			ExcelController.write(projFile, new ArrayList<EffortLog>(), new ArrayList<DefectLog>());
+			currLog = new EffortLog();
+			clockIsRunning = false;
+			projInfo = ExcelController.readEffortLogs(projFile);
+		}
 	}
 	
 	// import an existing project in an Excel workbook
-	public void importProject (ActionEvent event) {		// needs to get relevant fields from the chosen file
+	public void importProject (ActionEvent event) {		// there was an error with importing a new file; check it
 		fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(
 				new ExtensionFilter("Worksheets", "*.xlsx", "*.xlsm", "*.xlsb", "*.xls")
 				);
 		projFile = fileChooser.showOpenDialog(primaryStage);
+		projInfo = ExcelController.readEffortLogs(projFile);
+		if (projInfo.size() <= 0 || projInfo.get(projInfo.size() - 1).getStop() != "") {
+			clockIsRunning = false;
+			currLog = new EffortLog();
+		} else {
+			clockIsRunning = true;
+			currLog = projInfo.get(projInfo.size() - 1);
+		}
+		System.out.println("Clock is running: " + clockIsRunning);
 	}
 	
 	
