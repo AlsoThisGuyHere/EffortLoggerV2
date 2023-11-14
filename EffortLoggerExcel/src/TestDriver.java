@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.ArrayList;
 
 public class TestDriver {
 
@@ -53,23 +54,29 @@ public class TestDriver {
 		}
 		
 		File savePath = new File("C:\\Users\\Emil\\Downloads");
-		ExcelController.write(savePath, "Business Project", effortArray, defectArray);
+		//ExcelController.write(savePath, "Business Project", effortArray, defectArray);
 		
 		File excelToRead = new File("C:\\Users\\Emil\\Downloads\\Business Project.xlsx");
 		
-		EffortLog[] outputEffort = ExcelController.readEffortLogs(excelToRead);
+		ArrayList<EffortLog> outputEffort = ExcelController.readEffortLogs(excelToRead);
 		
-		for(int i = 0; i < outputEffort.length; i++)
+		for(int i = 0; i < outputEffort.size(); i++)
 		{
-			System.out.println(outputEffort[i].toString());
+			System.out.println(outputEffort.get(i).toString());
 		}
 		
-		DefectLog[] outputDefect = ExcelController.readDefectLogs(excelToRead);
+		ArrayList<DefectLog> outputDefect = ExcelController.readDefectLogs(excelToRead);
 		
-		for(int i = 0; i < outputDefect.length; i++)
+		for(int i = 0; i < outputDefect.size(); i++)
 		{
-			System.out.println(outputDefect[i].toString());
+			System.out.println(outputDefect.get(i).toString());
 		}
+		
+		File saveEffort = new File("C:\\Users\\Emil\\Downloads\\Effort Save.xlsx");
+		ExcelController.writeEffortLog(saveEffort, outputEffort);
+		
+		File saveDefect = new File("C:\\Users\\Emil\\Downloads\\Defect Save.xlsx");
+		ExcelController.writeDefectLog(saveDefect, outputDefect);
 	}
 
 }

@@ -2,6 +2,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+import java.util.ArrayList;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,7 +18,7 @@ public class ExcelController {
 	
 	// Outputs an array of Effort Logs read from the Excel file given in the argument
 	// Excel file format must be exact in order for method to work
-	public static EffortLog[] readEffortLogs(File file)
+	public static ArrayList<EffortLog> readEffortLogs(File file)
 	{
 		try
 		{
@@ -24,7 +26,7 @@ public class ExcelController {
 			Workbook workbook = new XSSFWorkbook(fis);
 			Sheet sheet = workbook.getSheetAt(0);
 			int numEntries = (int) sheet.getRow(0).getCell(6).getNumericCellValue();
-			EffortLog[] output = new EffortLog[numEntries];
+			ArrayList<EffortLog> output = new ArrayList<EffortLog>();
 			for(int i = 0; i < numEntries; i++)
 			{
 				Row row = sheet.getRow(i+3);
@@ -36,8 +38,8 @@ public class ExcelController {
 				String lifeCycleStep = row.getCell(5).getStringCellValue();
 				String category = row.getCell(6).getStringCellValue();
 				String delInt = row.getCell(7).getStringCellValue();
-				output[i] = new EffortLog(number, date, start, stop, timeElapsed, lifeCycleStep,
-											category, delInt);
+				output.add(new EffortLog(number, date, start, stop, timeElapsed, lifeCycleStep,
+											category, delInt));
 			}
 			workbook.close();
 			return output;
@@ -53,7 +55,7 @@ public class ExcelController {
 	
 	// Outputs an array of Defect Logs read from the Excel file given in the argument
 	// Excel file format must be exact in order for method to work
-	public static DefectLog[] readDefectLogs(File file)
+	public static ArrayList<DefectLog> readDefectLogs(File file)
 	{
 		try
 		{
@@ -61,7 +63,7 @@ public class ExcelController {
 			Workbook workbook = new XSSFWorkbook(fis);
 			Sheet sheet = workbook.getSheetAt(0);
 			int numEntries = (int) sheet.getRow(0).getCell(14).getNumericCellValue();
-			DefectLog[] output = new DefectLog[numEntries];
+			ArrayList<DefectLog> output = new ArrayList<DefectLog>();
 			for(int i = 0; i < numEntries; i++)
 			{
 				Row row = sheet.getRow(i+3);
@@ -73,8 +75,8 @@ public class ExcelController {
 				String category = row.getCell(14).getStringCellValue();
 				String status = row.getCell(15).getStringCellValue();
 				int fix = (int) row.getCell(16).getNumericCellValue();
-				output[i] = new DefectLog(number, name, detail, injected, removed, category,
-											status, fix);
+				output.add(new DefectLog(number, name, detail, injected, removed, category,
+											status, fix));
 			}
 			workbook.close();
 			return output;
@@ -87,6 +89,194 @@ public class ExcelController {
 		
 		return null;
 	}
+	
+	public static void writeEffortLog(File file, ArrayList<EffortLog> effortLogs)
+	{
+		try
+		{
+			Workbook workbook = new XSSFWorkbook();
+			Sheet sheet = workbook.createSheet();
+			
+			// Set column widths
+			sheet.setColumnWidth(1, 12*256);    //  Date
+			sheet.setColumnWidth(4, 14*256);    //  Time Elapsed
+			sheet.setColumnWidth(5, 20*256);  	//  Number of Entries
+			sheet.setColumnWidth(6, 13*256);	//  Category
+			sheet.setColumnWidth(7, 37*256);    //  Deliverable / Interruption / etc.
+			
+			// Define fonts & styles
+			XSSFFont fontBold = (XSSFFont) workbook.createFont();
+			fontBold.setBold(true);
+			
+			XSSFCellStyle styleBoldCenter = (XSSFCellStyle) workbook.createCellStyle();
+			styleBoldCenter.setFont(fontBold);
+			styleBoldCenter.setAlignment(HorizontalAlignment.CENTER);
+			
+			XSSFCellStyle styleCenter = (XSSFCellStyle) workbook.createCellStyle();
+			styleCenter.setAlignment(HorizontalAlignment.CENTER);
+			
+			XSSFCellStyle styleLeft = (XSSFCellStyle) workbook.createCellStyle();
+			styleLeft.setAlignment(HorizontalAlignment.LEFT);
+			
+			// First row
+			Row firstRow = sheet.createRow(0);
+			firstRow.setHeight((short) 500);
+			
+			Cell projNameCell = firstRow.createCell(0);
+			projNameCell.setCellValue("Project Name:");
+			projNameCell.setCellStyle(styleBoldCenter);
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 1));
+			
+			Cell fileNameCell = firstRow.createCell(2);
+			fileNameCell.setCellValue(file.getName().substring(0, file.getName().indexOf('.')));
+			fileNameCell.setCellStyle(styleCenter);
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 4));
+			
+			Cell numOfEffortEntriesCell = firstRow.createCell(5);
+			numOfEffortEntriesCell.setCellValue("Number of Entries:");
+			numOfEffortEntriesCell.setCellStyle(styleBoldCenter);
+			
+			Cell effortEntriesCell = firstRow.createCell(6);
+			effortEntriesCell.setCellValue(effortLogs.size());
+			effortEntriesCell.setCellStyle(styleLeft);
+			
+			// Second row
+			Row secondRow = sheet.createRow(1);
+			secondRow.createCell(0).setCellValue("Number");
+			secondRow.createCell(1).setCellValue("Date");
+			secondRow.createCell(2).setCellValue("Start");
+			secondRow.createCell(3).setCellValue("Stop");
+			secondRow.createCell(4).setCellValue("Time Elapsed");
+			secondRow.createCell(5).setCellValue("Life Cycle Step");
+			secondRow.createCell(6).setCellValue("Category");
+			secondRow.createCell(7).setCellValue("Deliverable / Interruption / etc.");
+			
+			for(int i = 0; i <= 7; i++) { secondRow.getCell(i).setCellStyle(styleBoldCenter); }
+			
+			// Effort Logs
+			for(int i = 0; i < effortLogs.size(); i++)
+			{
+				Row row = sheet.createRow(3+i);
+				row.createCell(0).setCellValue(effortLogs.get(i).getNumber());
+				row.createCell(1).setCellValue(effortLogs.get(i).getDate());
+				row.createCell(2).setCellValue(effortLogs.get(i).getStart());
+				row.createCell(3).setCellValue(effortLogs.get(i).getStop());
+				row.createCell(4).setCellValue(effortLogs.get(i).getTimeElapsed());
+				row.createCell(5).setCellValue(effortLogs.get(i).getLifeCycleStep());
+				row.createCell(6).setCellValue(effortLogs.get(i).getCategory());
+				row.createCell(7).setCellValue(effortLogs.get(i).getDelInt());
+				
+				row.getCell(0).setCellStyle(styleCenter);
+				row.getCell(1).setCellStyle(styleCenter);
+				row.getCell(2).setCellStyle(styleCenter);
+				row.getCell(3).setCellStyle(styleCenter);
+				row.getCell(4).setCellStyle(styleCenter);
+			}
+			
+			FileOutputStream fos = new FileOutputStream(file);
+			workbook.write(fos);
+			workbook.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Saving failed.");
+			System.out.println(e.toString());
+		}
+	}
+	
+	public static void writeDefectLog(File file, ArrayList<DefectLog> defectLogs)
+	{
+		try
+		{
+			Workbook workbook = new XSSFWorkbook();
+			Sheet sheet = workbook.createSheet();
+			
+			// Set column widths
+			sheet.setColumnWidth(0, 11*256);  	//  Defect Log
+			sheet.setColumnWidth(1, 15*256);    //  Name
+			sheet.setColumnWidth(2, 12*256);    //  Detail
+			sheet.setColumnWidth(3, 10*256);	//  Injected
+			sheet.setColumnWidth(4, 20*256);	//  Number of Entries
+			sheet.setColumnWidth(5, 12*256);	//  Category
+			
+			// Define fonts & styles
+			XSSFFont fontBold = (XSSFFont) workbook.createFont();
+			fontBold.setBold(true);
+			
+			XSSFCellStyle styleBoldCenter = (XSSFCellStyle) workbook.createCellStyle();
+			styleBoldCenter.setFont(fontBold);
+			styleBoldCenter.setAlignment(HorizontalAlignment.CENTER);
+			
+			XSSFCellStyle styleCenter = (XSSFCellStyle) workbook.createCellStyle();
+			styleCenter.setAlignment(HorizontalAlignment.CENTER);
+			
+			XSSFCellStyle styleLeft = (XSSFCellStyle) workbook.createCellStyle();
+			styleLeft.setAlignment(HorizontalAlignment.LEFT);
+			
+			XSSFCellStyle styleBold = (XSSFCellStyle) workbook.createCellStyle();
+			styleBold.setFont(fontBold);
+			
+			// First row
+			Row firstRow = sheet.createRow(0);
+			firstRow.setHeight((short) 500);
+			
+			Cell defectLogCell = firstRow.createCell(0);
+			defectLogCell.setCellValue("Defect Log:");
+			defectLogCell.setCellStyle(styleBold);
+			
+			Cell fileNameCell = firstRow.createCell(1);
+			fileNameCell.setCellValue(file.getName().substring(0, file.getName().indexOf('.')));
+			fileNameCell.setCellStyle(styleCenter);
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 1, 3));
+			
+			Cell numOfDefectEntriesCell = firstRow.createCell(4);
+			numOfDefectEntriesCell.setCellValue("Number of Entries:");
+			numOfDefectEntriesCell.setCellStyle(styleBold);
+			
+			Cell defectEntriesCell = firstRow.createCell(5);
+			defectEntriesCell.setCellValue(defectLogs.size());
+			defectEntriesCell.setCellStyle(styleLeft);
+			
+			// Second row
+			Row secondRow = sheet.createRow(1);
+			secondRow.createCell(0).setCellValue("Number");
+			secondRow.createCell(1).setCellValue("Name");
+			secondRow.createCell(2).setCellValue("Detail");
+			secondRow.createCell(3).setCellValue("Injected");
+			secondRow.createCell(4).setCellValue("Removed");
+			secondRow.createCell(5).setCellValue("Category");
+			secondRow.createCell(6).setCellValue("Status");
+			secondRow.createCell(7).setCellValue("Fix");
+			
+			for(int i = 0; i <= 7; i++) { secondRow.getCell(i).setCellStyle(styleBold); }
+			
+			// Defect Logs
+			for(int i = 0; i < defectLogs.size(); i++)
+			{
+				Row row = sheet.createRow(3+i);
+				row.createCell(0).setCellValue(defectLogs.get(i).getNumber());
+				row.createCell(1).setCellValue(defectLogs.get(i).getName());
+				row.createCell(2).setCellValue(defectLogs.get(i).getDetail());
+				row.createCell(3).setCellValue(defectLogs.get(i).getInjected());
+				row.createCell(4).setCellValue(defectLogs.get(i).getRemoved());
+				row.createCell(5).setCellValue(defectLogs.get(i).getCategory());
+				row.createCell(6).setCellValue(defectLogs.get(i).getStatus());
+				row.createCell(7).setCellValue(defectLogs.get(i).getFix());
+			}
+			
+			FileOutputStream fos = new FileOutputStream(file);
+			workbook.write(fos);
+			workbook.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Saving failed.");
+			System.out.println(e.toString());
+		}
+	}
+	
+	
+	// Obsolete? Kept in case this is needed for later use
 	
 	// Saves an excel containing the Effort Log and Defect Log information given to it
 	public static void write(File directory, String fileName, EffortLog[] effortLogs, DefectLog[] defectLogs)
