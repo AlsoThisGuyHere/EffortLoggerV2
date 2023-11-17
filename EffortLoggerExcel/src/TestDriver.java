@@ -31,29 +31,29 @@ public class TestDriver {
 											defectRemoved, defectCategory, defectStatus, defectFix);
 		//System.out.println(defect.toString());
 		
-		EffortLog[] effortArray = new EffortLog[3];
-		effortArray[0] = effort;
-		effortArray[1] = new EffortLog(2, "2023-11-09", "20:21:37", "20:21:38", 0.02, "Verifying",
-										"Deliverables", "Conceptual Design");
-		effortArray[2] = new EffortLog(3, "2023-11-09", "20:25:17", "20:25:19", 0.03, "Verifying",
-										"Defects", "- new defect -");
+		ArrayList<EffortLog> effortList = new ArrayList<EffortLog>();
+		effortList.add(effort);
+		effortList.add(new EffortLog(2, "2023-11-09", "20:21:37", "20:21:38", 0.02, "Verifying",
+										"Deliverables", "Conceptual Design"));
+		effortList.add(new EffortLog(3, "2023-11-09", "20:25:17", "20:25:19", 0.03, "Verifying",
+										"Defects", "- new defect -"));
 		
-		DefectLog[] defectArray = new DefectLog[2];
-		defectArray[0] = defect;
-		defectArray[1] = new DefectLog(2, "defect2", "i did it again", "Team Meeting",
-										"Team Meeting", "30 Build, Package", "Open", 0);
+		ArrayList<DefectLog> defectList = new ArrayList<DefectLog>();
+		defectList.add(defect);
+		defectList.add(new DefectLog(2, "defect2", "i did it again", "Team Meeting",
+										"Team Meeting", "30 Build, Package", "Open", 0));
 		
-		for(int i = 0; i < effortArray.length; i++)
+		for(int i = 0; i < effortList.size(); i++)
 		{
-			System.out.println(effortArray[i].toString());
+			System.out.println(effortList.get(i).toString());
 		}
 		
-		for(int i = 0; i < defectArray.length; i++)
+		for(int i = 0; i < defectList.size(); i++)
 		{
-			System.out.println(defectArray[i].toString());
+			System.out.println(defectList.get(i).toString());
 		}
 		
-		File savePath = new File("C:\\Users\\Emil\\Downloads");
+		File savePath = new File("C:\\Users\\Emil\\Downloads\\Business Project.xlsx");
 		//ExcelController.write(savePath, "Business Project", effortArray, defectArray);
 		
 		File excelToRead = new File("C:\\Users\\Emil\\Downloads\\Business Project.xlsx");
