@@ -279,7 +279,7 @@ public class ExcelController {
 	// Obsolete? Kept in case this is needed for later use
 	
 	// Saves an excel containing the Effort Log and Defect Log information given to it
-	public static void write(File directory, String fileName, EffortLog[] effortLogs, DefectLog[] defectLogs)
+	public static void write(File file, List<EffortLog> effortLogs, List<DefectLog> defectLogs)			// changed to only take a file and two Lists
 	{
 		try
 		{
@@ -289,26 +289,25 @@ public class ExcelController {
 			
 			setColumnWidths(sheet);
 			
-			firstRow(workbook, sheet, fileName, effortLogs.length, defectLogs.length);
+			firstRow(workbook, sheet, file.getName(), effortLogs.size(), defectLogs.size());
 			secondRow(workbook, sheet);
-			
-			int rows = effortLogs.length > defectLogs.length ? effortLogs.length : defectLogs.length;
+			int rows = effortLogs.size() > defectLogs.size() ? effortLogs.size() : defectLogs.size();
 			XSSFCellStyle styleCenter = (XSSFCellStyle) workbook.createCellStyle();
 			styleCenter.setAlignment(HorizontalAlignment.CENTER);
 			
 			for(int i = 0; i < rows; i++)
 			{
-				Row row = sheet.createRow(3+i);
-				if(i < effortLogs.length)
+				Row row = sheet.createRow(2+i);			// createRow uses a row index beginning at 0 (so 0 is row 1, 1 is row 2, etc.)
+				if(i < effortLogs.size())
 				{
-					row.createCell(0).setCellValue(effortLogs[i].getNumber());
-					row.createCell(1).setCellValue(effortLogs[i].getDate());
-					row.createCell(2).setCellValue(effortLogs[i].getStart());
-					row.createCell(3).setCellValue(effortLogs[i].getStop());
-					row.createCell(4).setCellValue(effortLogs[i].getTimeElapsed());
-					row.createCell(5).setCellValue(effortLogs[i].getLifeCycleStep());
-					row.createCell(6).setCellValue(effortLogs[i].getCategory());
-					row.createCell(7).setCellValue(effortLogs[i].getDelInt());
+					row.createCell(0).setCellValue(effortLogs.get(i).getNumber()); 
+					row.createCell(1).setCellValue(effortLogs.get(i).getDate());
+					row.createCell(2).setCellValue(effortLogs.get(i).getStart());
+					row.createCell(3).setCellValue(effortLogs.get(i).getStop());
+					row.createCell(4).setCellValue(effortLogs.get(i).getTimeElapsed());
+					row.createCell(5).setCellValue(effortLogs.get(i).getLifeCycleStep());
+					row.createCell(6).setCellValue(effortLogs.get(i).getCategory());
+					row.createCell(7).setCellValue(effortLogs.get(i).getDelInt());
 					
 					row.getCell(0).setCellStyle(styleCenter);
 					row.getCell(1).setCellStyle(styleCenter);
@@ -317,21 +316,21 @@ public class ExcelController {
 					row.getCell(4).setCellStyle(styleCenter);
 				}
 				
-				if(i < defectLogs.length)
+				if(i < defectLogs.size())
 				{
-					row.createCell(9).setCellValue(defectLogs[i].getNumber());
-					row.createCell(10).setCellValue(defectLogs[i].getName());
-					row.createCell(11).setCellValue(defectLogs[i].getDetail());
-					row.createCell(12).setCellValue(defectLogs[i].getInjected());
-					row.createCell(13).setCellValue(defectLogs[i].getRemoved());
-					row.createCell(14).setCellValue(defectLogs[i].getCategory());
-					row.createCell(15).setCellValue(defectLogs[i].getStatus());
-					row.createCell(16).setCellValue(defectLogs[i].getFix());
+					row.createCell(9).setCellValue(defectLogs.get(i).getNumber());
+					row.createCell(10).setCellValue(defectLogs.get(i).getName());
+					row.createCell(11).setCellValue(defectLogs.get(i).getDetail());
+					row.createCell(12).setCellValue(defectLogs.get(i).getInjected());
+					row.createCell(13).setCellValue(defectLogs.get(i).getRemoved());
+					row.createCell(14).setCellValue(defectLogs.get(i).getCategory());
+					row.createCell(15).setCellValue(defectLogs.get(i).getStatus());
+					row.createCell(16).setCellValue(defectLogs.get(i).getFix());
 				}
 			}
 			
 			FileOutputStream fos =
-					new FileOutputStream(new File(directory.getAbsolutePath() + "\\" + fileName + ".xlsx"));
+					new FileOutputStream(new File(file.getAbsolutePath()/* + "\\" + fileName + ".xlsx"*/));
 			workbook.write(fos);
 			workbook.close();
 		}
