@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 
 public class AddTaskPage {
 	
-	private TaskPage taskPage = new TaskPage();
+	private EffortLoggerPage taskPage = new EffortLoggerPage();
 	
 	public void addTaskPage(Stage primaryStage, List<User> users, List<Task> tasks, boolean checkAuthentication, User user) {
     	GridPane gridPane = new GridPane();
@@ -43,7 +43,7 @@ public class AddTaskPage {
 				}
 				else {
 					tasks.add(new Task(tfTask.getText(), tfEstimate.getText()));
-					taskPage.createPlanningPokerPage(primaryStage, checkAuthentication, users, user, tasks);
+					taskPage.createEffortLoggerPage(primaryStage, checkAuthentication, users, user, tasks);
 				}
 			}
 		});

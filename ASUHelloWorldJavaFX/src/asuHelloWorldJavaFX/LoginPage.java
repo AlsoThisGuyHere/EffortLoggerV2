@@ -19,13 +19,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
  
-public class ASUHelloWorldJavaFX extends Application {
+public class LoginPage extends Application {
 	
 	private User loggedInUser;
 	
 	private SignupPage signupPage;
 	
-	private TaskPage taskPage;
+	private EffortLoggerPage taskPage;
 
 	public static void main(String[] args) {
         launch(args);
@@ -39,7 +39,7 @@ public class ASUHelloWorldJavaFX extends Application {
     	System.out.println(signedUpUsers.size());
     	System.out.println(tasks.size());
     	signupPage = new SignupPage();
-    	taskPage = new TaskPage();
+    	taskPage = new EffortLoggerPage();
         primaryStage.setTitle("Effort Logger");
         
         Label username = new Label();
@@ -70,7 +70,7 @@ public class ASUHelloWorldJavaFX extends Application {
 				else {
 					loggedInUser = user;
 					loggedInUser.setIsLoggedIn(Boolean.TRUE);
-					taskPage.createPlanningPokerPage(primaryStage, true, signedUpUsers, user, tasks);
+					taskPage.createEffortLoggerPage(primaryStage, true, signedUpUsers, user, tasks);
 				}
             }
         });
@@ -88,7 +88,7 @@ public class ASUHelloWorldJavaFX extends Application {
         directAccessButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent actionEvent) {
-				taskPage.createPlanningPokerPage(primaryStage, false, signedUpUsers, null, tasks);
+				taskPage.createEffortLoggerPage(primaryStage, false, signedUpUsers, null, tasks);
 			}
 		});
         
@@ -96,7 +96,7 @@ public class ASUHelloWorldJavaFX extends Application {
         root.addRow(0, username, tfUsername);
         root.addRow(1, password, passwordField);
         root.addRow(2, btn, signupBtn);
-        root.addRow(3, directAccessButton);
+//        root.addRow(3, directAccessButton);
         root.setAlignment(Pos.CENTER);
         
         primaryStage.setScene(new Scene(root, 400, 400));

@@ -30,6 +30,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+// Hasan Shahid
 public class SharePage {
 	
 	public void sharePage(List<PlanningPoker> planningPoker) {
@@ -71,6 +72,7 @@ public class SharePage {
 			@Override
 			public void handle(ActionEvent actionEvent) {
 				if (checkTextInput(tfSender.getText()) || checkTextInput(tfReceiver.getText()) || listView.getSelectionModel().getSelectedItems().isEmpty()) {
+					alert.setAlertType(AlertType.ERROR);
 					alert.setContentText("All the fields are requried");
 					alert.setTitle("Share Error");
 					alert.show();
@@ -80,18 +82,18 @@ public class SharePage {
 					alert.setContentText("Estimates shared successfully");
 					alert.setTitle("Share Successful");
 					alert.show();
-					try {
-						MimeMessage message = new MimeMessage(session);
-						message.setFrom(new InternetAddress(tfSender.getText()));
-						message.setRecipient(Message.RecipientType.TO, new InternetAddress(tfReceiver.getText()));
-						message.setSubject("Subject");
-						message.setText("Sample message");
-						Transport.send(message);
-						
-					} catch (MessagingException e) {
-						e.printStackTrace();
-						System.out.println("Error sending");
-					}
+//					try {
+//						MimeMessage message = new MimeMessage(session);
+//						message.setFrom(new InternetAddress(tfSender.getText()));
+//						message.setRecipient(Message.RecipientType.TO, new InternetAddress(tfReceiver.getText()));
+//						message.setSubject("Subject");
+//						message.setText("Sample message");
+//						Transport.send(message);
+//						
+//					} catch (MessagingException e) {
+//						e.printStackTrace();
+//						System.out.println("Error sending");
+//					}
 				}
 			}
 		});

@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 
 public class SignupPage {
 	
-	private ASUHelloWorldJavaFX main = new ASUHelloWorldJavaFX();
+	private LoginPage main = new LoginPage();
 	
 	private ReadWrite readWrite = new ReadWrite("src\\sample.txt");
 	

@@ -18,12 +18,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+// Hasan Shahid
 public class SinglePlayerPage {
 	List<PlanningPoker> planningPoker = new ArrayList<PlanningPoker>();
 	
 	SearchHistoricalDataPage historicalDataPage = new SearchHistoricalDataPage();
 	
 	SharePage sharePage = new SharePage();
+	
+	HistoricalData historicalData = new HistoricalData();
 
 	public void createSinglePlayerScreen(Stage primaryStage) {
 		GridPane gridPane = new GridPane();
@@ -57,6 +60,7 @@ public class SinglePlayerPage {
 			@Override
 			public void handle(ActionEvent actionEvent) {
 				if (checkTextInput(tfTaskName.getText()) || checkTextInput(comboBox.getValue()) || checkTextInput(reasonArea.getText())) {
+					alert.setAlertType(AlertType.ERROR);
 					alert.setContentText("All the fields are required");
 					alert.setTitle("Planning Poker Estimation Error");
 					alert.show();
@@ -78,7 +82,8 @@ public class SinglePlayerPage {
     	searchHistoricalDataButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent actionEvent) {
-				historicalDataPage.createSearchHistoricalPage();
+//				historicalDataPage.createSearchHistoricalPage();
+				historicalData.ProjectDataPage(primaryStage, null, null, false, null);
 			}
 		});
     	
