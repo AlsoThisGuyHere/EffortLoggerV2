@@ -35,7 +35,7 @@ public class MainLoginPage extends Application {
     }
 	
 	public void start(Stage primaryStage) {
-		login(primaryStage, getUsersFromFile(), new ArrayList<Task>());
+		login(primaryStage, getUsersFromFile(), new ArrayList<Task>());			// get rid of tasks
 		/*try {																	// for when we eventually use only FXML files
 			//BorderPane root = new BorderPane();
 			//Group root = new Group();

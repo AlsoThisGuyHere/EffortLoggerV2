@@ -1,7 +1,6 @@
 package effortloggerv2;
 
 import FXDirectoryExcel.*;
-import forLater.ExcelCreator;
 
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -29,11 +28,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
-/*import org.apache.poi.ss.usermodel.Cell;		// not sure if I will need ALL of these (or ANY)
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;*/
 
 public class ConsoleController implements Initializable{
 	
@@ -73,13 +67,9 @@ public class ConsoleController implements Initializable{
 	@FXML
 	private Button stopActivity;
 	
+	// stores all log entries and the current entry
 	private List<EffortLog> projInfo;
 	private EffortLog currLog;
-	/*private Workbook workbook;
-	private Sheet sheet;
-	private Row row;
-	private int cellNum = 0;
-	private Cell cell;*/
 	
 	// need to save whether the clock is running on the excel sheet (maybe if Stop field of most recent task is "", then clockIsRunning = true)
 	private boolean clockIsRunning = false;
@@ -102,9 +92,12 @@ public class ConsoleController implements Initializable{
 	}
 	
 	
-	
-	// check if all required fields are filled in. If so, get local time and create a new log entry with selected fields and current time
-	// iterate through each row's Number field until one returns null. Put the new entry in that row
+	/**********
+	 * 
+	 * This method checks if all required fields are filled in, then creates a new log entry.
+	 * 
+	 * @param event		This event refers to the activation of the "Start Activity" button.
+	 */
 	public void startTimer(ActionEvent event) {
 		if (projFile == null) {
 			alert.setTitle("No file chosen");
@@ -114,23 +107,27 @@ public class ConsoleController implements Initializable{
 			alert.setTitle("Start Ignored");
 			alert.setContentText("The clock is already running.");
 			alert.show();
+		} else if (lifecycleStep.getValue() == null || effortCategory.getValue() == null || projNameField.getText() == null) {
+			alert.setTitle("Options left blank");
+			alert.setContentText("Log entry cannot contain blank fields.");
+			alert.show();
 		} else {
 			System.out.println("Start Time: " + java.time.LocalTime.now());
-			//currLog.setNumber(projInfo.size() + 2);
 			currLog = new EffortLog(projInfo.size() + 1, java.time.LocalDate.now().toString(), java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss")).toString(),
 					"", -1, lifecycleStep.getValue(), effortCategory.getValue(), projNameField.getText());  // try "" instead of null
 			projInfo.add(currLog);
-			ExcelController.write(projFile, projInfo, new ArrayList<DefectLog>());
-			/*List<EffortLog> projInfo = new ArrayList<String>();
-			projInfo.add(java.time.LocalTime.now().toString());
-			projInfo.add(lifecycleStep.getValue());
-			projInfo.add(effortCategory.getValue());
-			projInfo.add(projNameField.getText());
-			System.out.println(projInfo.toString());*/
+			//ExcelController.write(projFile, projInfo, new ArrayList<DefectLog>());
+			ExcelController.writeEffortLog(projFile, (ArrayList<EffortLog>)projInfo);
 			clockIsRunning = true;
 		}
 	}
-	// if timerRunning is true, edit last log entry and set the stop time to localTime
+	
+	/*******
+	 * 
+	 * This method sets the stop time of the latest log entry to localTime if timerRunning is true.
+	 * 
+	 * @param event		This event reference is the activation of the "Stop Activity" button.
+	 */
 	public void stopTimer(ActionEvent event) {
 		if (!clockIsRunning) {
 			alert.setTitle("Stop Ignored");
@@ -139,24 +136,48 @@ public class ConsoleController implements Initializable{
 		} else {
 			System.out.println("Stop Time: " + java.time.LocalTime.now());
 			currLog.setStop(java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss")).toString());
-			ExcelController.write(projFile, projInfo, new ArrayList<DefectLog>());
+			ExcelController.writeEffortLog(projFile, (ArrayList<EffortLog>)projInfo);
 			clockIsRunning = false;
 		}
 	}
 	
+	/****
+	 * Switches the active scene to the defect console.
+	 * 
+	 * @param event		This event references the activation of the "Switch to Defect Console" button.
+	 */
 	public void openDefectConsole(ActionEvent event) {
-		try {																						// just for now
+		try {														// do this any time you want to switch scenes
 			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("DefectConsole.fxml"));
 			Parent root = loader.load();
 			DefectConsoleController consoleController = loader.getController();
-			consoleController.keepUser(primaryStage, true, users, user, tasks);
+			consoleController.keepUser(primaryStage, true, users, user, tasks);		// calls a method to carry over important data
 			Scene scene = new Scene(root,1280,720);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/****
+	 * Switches the active scene to the planning poker tool.
+	 * 
+	 * @param event		This event references the activation of the "Switch to Planning Poker" button.
+	 */
+	public void openPlanningPoker(ActionEvent event) {
+		/*try {																		
+    		root = FXMLLoader.load(getClass().getResource("ProjectData.fxml"));			// for when we switch to only FXML files
+    		primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+    		scene = new Scene(root);
+    		primaryStage.setScene(scene);
+    		primaryStage.show();
+    	}
+    	catch (Exception except) {
+    		except.printStackTrace();
+    	}*/
+		HistoricalData.ProjectDataPage(primaryStage, users, tasks, authenticationStatus, user);
 	}
 	
 	// log out current user
@@ -193,36 +214,48 @@ public class ConsoleController implements Initializable{
 		} else {
 			//ExcelCreator.createExcel(projFile);
 			ExcelController.write(projFile, new ArrayList<EffortLog>(), new ArrayList<DefectLog>());
-			currLog = new EffortLog();
+			currLog = new EffortLog();	// redundant
 			clockIsRunning = false;
 			projInfo = ExcelController.readEffortLogs(projFile);
 		}
 	}
 	
-	// import an existing project in an Excel workbook
-	public void importProject (ActionEvent event) {		// there was an error with importing a new file; check it
+	/***
+	 * Imports an existing project from an Excel workbook.
+	 * 
+	 * @param event
+	 */
+	public void importProject (ActionEvent event) {		
 		fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(
-				new ExtensionFilter("Worksheets", "*.xlsx", "*.xlsm", "*.xlsb", "*.xls")
+				new ExtensionFilter("Worksheets", "*.xlsx")
 				);
 		projFile = fileChooser.showOpenDialog(primaryStage);
-		projInfo = ExcelController.readEffortLogs(projFile);
-		if (projInfo.size() <= 0 || projInfo.get(projInfo.size() - 1).getStop() != "") {
-			clockIsRunning = false;
-			currLog = new EffortLog();
+		if (projFile == null) {
+			System.out.println("No file was chosen by user.");
 		} else {
-			clockIsRunning = true;
-			currLog = projInfo.get(projInfo.size() - 1);
+			projInfo = ExcelController.readEffortLogs(projFile);
+			if (projInfo.size() <= 0 || projInfo.get(projInfo.size() - 1).getStop() != "") {	// needs to check if logged day is today
+				clockIsRunning = false;
+				currLog = new EffortLog();		// redundant
+			} else {
+				clockIsRunning = true;
+				currLog = projInfo.get(projInfo.size() - 1);
+			}
+			System.out.println("Clock is running: " + clockIsRunning);
 		}
-		System.out.println("Clock is running: " + clockIsRunning);
 	}
 	
 	
 	
 	
 	
-	// sets the text above the Task box based on what effort category the user chooses
-	public void getTask(ActionEvent event) {
+	/****
+	 * Private method to set the text above the Task box based on what effort category the user chooses.
+	 * 
+	 * @param event
+	 */
+	private void getTask(ActionEvent event) {
 		String category = effortCategory.getValue();
 		taskName.setText(category);
 	}

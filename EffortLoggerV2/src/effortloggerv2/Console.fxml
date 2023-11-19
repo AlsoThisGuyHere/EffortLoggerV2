@@ -55,6 +55,6 @@
       <Button fx:id="stopActivity" layoutX="680.0" layoutY="239.0" mnemonicParsing="false" onAction="#stopTimer" text="Stop Activity" />
       <Button alignment="CENTER_RIGHT" layoutX="735.0" layoutY="450.0" mnemonicParsing="false" onAction="#logout" text="Log Out" />
       <Button layoutX="479.0" layoutY="450.0" mnemonicParsing="false" onAction="#openDefectConsole" text="Defect Log Console" />
-      <Button layoutX="620.0" layoutY="450.0" mnemonicParsing="false" text="Planning Poker" />
+      <Button layoutX="620.0" layoutY="450.0" mnemonicParsing="false" onAction="#openPlanningPoker" text="Planning Poker" />
    </children>
 </AnchorPane>

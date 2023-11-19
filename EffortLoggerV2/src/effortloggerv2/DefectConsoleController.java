@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import FXDirectoryExcel.DefectLog;
+import FXDirectoryExcel.EffortLog;
+import FXDirectoryExcel.ExcelController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 public class DefectConsoleController implements Initializable{
@@ -41,17 +47,17 @@ public class DefectConsoleController implements Initializable{
 	@FXML
 	private Parent root;
 	@FXML
-	private Label defectStatus;
-	@FXML
-	private Label num;
+	private Label defectNum;
 	@FXML
 	private Label defectName;
 	@FXML
-	private TextField description;
+	private TextField defectDetail;
 	@FXML
-    private ChoiceBox<String> defectSelector;
+	private Label defectStatus;
 	@FXML
-	private ChoiceBox<String> defectFix;
+    private ChoiceBox<DefectLog> defectSelector;
+	@FXML
+	private ChoiceBox<DefectLog> defectFix;
 	private String[] defects = {"-no defect selected-"};// this will get defects from the imported file
 	@FXML
 	private ChoiceBox<String> stepInjected;
@@ -63,6 +69,34 @@ public class DefectConsoleController implements Initializable{
     private ChoiceBox<String> defectCategory;
 	private String[] defectCategories = {"Not Specified", "Documentation", "Syntax", "Build, Package", "Assignment", "Interface",
 			"Checking", "Data", "Function", "System", "Environment"};
+	
+	private List<DefectLog> defectInfo;
+	private DefectLog currDefect;
+	
+	// for defect selection
+	private StringConverter<DefectLog> converter = new StringConverter<DefectLog>() {
+
+		@Override
+		public DefectLog fromString(String string) {
+			//for (DefectLog log : defectInfo) {
+			//	// go through list and find corresponding entry
+			//	if (log.getName() == string) {
+			//		return log;
+			//	}
+			//}
+			return null;
+		}
+
+		@Override
+		public String toString(DefectLog defectLog) {
+			// TODO Auto-generated method stub
+			if (defectLog != null)
+				return defectLog.getName();
+			return "-no defect selected-";
+		}
+	
+	
+	};
 	
 	
 	// these keep track of the user currently logged in
@@ -82,40 +116,56 @@ public class DefectConsoleController implements Initializable{
 	}
 	
 	// import an existing project in an Excel workbook
-	public void importProject (ActionEvent event) {		// needs to get relevant fields from the chosen file
+	public void importProject (ActionEvent event) {		
+		// get list of defects from Excel and pass it to populateDefectSelector()
 		fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(
-				new ExtensionFilter("Worksheets", "*.xlsx", "*.xlsm", "*.xlsb", "*.xls")
+				new ExtensionFilter("Worksheets", "*.xlsx")
 				);
 		projFile = fileChooser.showOpenDialog(primaryStage);
-		// get list of defects from Excel and pass it to populateDefectSelector()
+		if (projFile == null) {
+			System.out.println("No file was chosen by user.");
+		} else {
+			defectInfo = ExcelController.readDefectLogs(projFile);
+			defectSelector.setItems(FXCollections.observableList(defectInfo));
+			defectFix.setItems(FXCollections.observableList(defectInfo));				// TODO: try this to ensure it works
+		}
 	}
 	
 	
 	public void updateDefect(ActionEvent event) {
 		
-		List<String> defectInfo = new ArrayList<String>();
-		defectInfo.add(num.getText());
-		defectInfo.add(defectName.getText());
-		defectInfo.add(description.getText());
-		defectInfo.add(stepInjected.getValue());
-		defectInfo.add(stepRemoved.getValue());
-		defectInfo.add(defectCategory.getValue());
-		defectInfo.add(defectStatus.getText());
+		currDefect.setName(defectName.getText());
+		currDefect.setCategory(defectCategory.getValue());
 		
-		for (String i : defectInfo) {			// just to prove it works
-			System.out.print(i +" | ");
+		
+		for (DefectLog d : defectInfo) {			// just to prove it works
+			System.out.println(d);
 		}
-		System.out.println();
+		//ExcelController.writeDefectLog(projFile, (ArrayList<DefectLog>)defectInfo);
 		
 		// now need to call updateDefect in the Excel creator and pass it defectInfo to insert into Excel
 		// get list of defects from Excel and pass it to populateDefectSelector()
 		
 	}
 	
+	public void addDefect(ActionEvent event) {
+		currDefect = new DefectLog();
+		defectInfo.add(currDefect);
+		defectSelector.setItems(FXCollections.observableList(defectInfo));
+		defectFix.setItems(FXCollections.observableList(defectInfo));
+	}
+	
 	public void deleteDefect(ActionEvent event) {
 		// ensure that the selected defect is not null before trying to delete anything, and set the selected defect to null after
 		System.out.println("Selected defect is no more");
+		if (currDefect == null) {
+			alert.setTitle("No defect chosen");
+			alert.setContentText("You must first select a defect!");
+			alert.show();
+		} else {
+			
+		}
 		// get list of defects from Excel and pass it to populateDefectSelector()
 	}
 	
@@ -135,26 +185,45 @@ public class DefectConsoleController implements Initializable{
 		}
 	}
 	
-	public void populateDefectSelector(ActionEvent event) {
-		
-	}
-	
 	public void changeStatus(ActionEvent event) {
 		
-		if (defectStatus.getText().equals("Closed"))
+		if (currDefect == null) {
+			alert.setTitle("No defect chosen");
+			alert.setContentText("You must first select a defect!");
+			alert.show();
+		}
+		else if (defectStatus.getText().equals("Closed"))
 			defectStatus.setText("Open");
 		else
 			defectStatus.setText("Closed");
 	}
 	
+	public void populateDefectSelector(ActionEvent event) {		// setOnAction activates EVERY TIME a choice is selected
+		System.out.println(defectSelector.getValue().toString());
+		currDefect = defectSelector.getValue();
+		System.out.println("Current Defect: " + currDefect.toString());
+		defectNum.setText(Integer.toString(currDefect.getNumber()));
+		defectName.setText(currDefect.getName());
+		defectDetail.setText(currDefect.getDetail());
+		stepInjected.setValue(currDefect.getInjected());
+		stepRemoved.setValue(currDefect.getRemoved());
+		defectCategory.setValue(currDefect.getCategory());
+		defectStatus.setText(currDefect.getStatus());
+		defectFix.setValue(defectInfo.get(currDefect.getFix() - 2));
+		
+	}
+	
 	// initializes the options in the choice boxes
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		defectSelector.getItems().addAll(defects);
-		defectFix.getItems().addAll(defects);
+		//defectSelector.getItems().addAll(defects);
+		//defectFix.getItems().addAll(defects);
 		stepInjected.getItems().addAll(lifecycleSteps);
 		stepRemoved.getItems().addAll(lifecycleSteps);
 		defectCategory.getItems().addAll(defectCategories);
-		// defectStatus.setOnAction(changeStatus);
+		defectSelector.setConverter(converter);
+		defectFix.setConverter(converter);
+		//defectSelector.getItems().addAll(defectInfo);
+		defectSelector.setOnAction(this::populateDefectSelector);
 	}
 }

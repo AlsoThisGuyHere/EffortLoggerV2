@@ -45,7 +45,7 @@
                </GridPane.margin>
             </Text>
             <Button mnemonicParsing="false" onAction="#importProject" prefHeight="27.0" prefWidth="240.0" text="Import Project" textAlignment="CENTER" GridPane.halignment="CENTER" />
-            <TextField fx:id="description" alignment="TOP_LEFT" maxWidth="500.0" prefHeight="70.0" prefWidth="200.0" promptText="Enter a description of the defect..." GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+            <TextField fx:id="defectDetail" alignment="TOP_LEFT" maxWidth="500.0" prefHeight="70.0" prefWidth="200.0" promptText="Enter a description of the defect..." GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
             <ChoiceBox fx:id="defectSelector" prefWidth="150.0" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="20.0" />
@@ -75,14 +75,9 @@
                   <Insets left="20.0" />
                </GridPane.margin>
             </Text>
-            <Button mnemonicParsing="false" onAction="#changeStatus" prefHeight="27.0" prefWidth="100.0" text="Close" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+            <Button mnemonicParsing="false" onAction="#changeStatus" prefHeight="27.0" prefWidth="150.0" text="Change Defect Status" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <GridPane.margin>
-                  <Insets left="20.0" />
-               </GridPane.margin>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#changeStatus" prefHeight="27.0" prefWidth="100.0" text="Reopen" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets right="20.0" />
+                  <Insets />
                </GridPane.margin>
             </Button>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Step when injected" textAlignment="CENTER" GridPane.halignment="LEFT" GridPane.rowIndex="5">
@@ -141,7 +136,7 @@
                   <Insets right="10.0" />
                </GridPane.margin>
             </Button>
-            <Label fx:id="num" textAlignment="CENTER" GridPane.rowIndex="3">
+            <Label fx:id="defectNum" textAlignment="CENTER" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets left="20.0" />
                </GridPane.margin>

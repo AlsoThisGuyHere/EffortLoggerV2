@@ -9,9 +9,12 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -71,13 +74,34 @@ public class TestDriver extends Application{
 			System.out.println(defectArray.get(i).toString());
 		}
 		
+		Button newFile = new Button();
+        newFile.setText("Create Excel File");
+        Button getFile = new Button();
+        getFile.setText("Import Excel File");
+        Button saveFile = new Button();						// change this
+        saveFile.setText("Save Excel File");
+        
 		
-		
+		// to make basic test UI
+        Label logNum = new Label();
+        Label date = new Label();
+        Label start = new Label();
+        Label stop = new Label();
+        
+        Label defectNum = new Label();
+        Label name = new Label();
+        Label detail = new Label();
+        Label injected = new Label();
+        
+        GridPane root = new GridPane();
+        root.addRow(0, newFile, logNum, defectNum);
+        root.addRow(1, getFile, date, name);
+        root.addRow(2, saveFile, start, detail);
+        //grid.addRow(3, null, stop, injected);
+        root.setAlignment(Pos.CENTER);
 		
 		primaryStage.setTitle("Excel Creation");
-        Button btn = new Button();
-        btn.setText("Create Excel File");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+        newFile.setOnAction(new EventHandler<ActionEvent>() {
  
             @Override
             public void handle(ActionEvent event) {
@@ -85,15 +109,48 @@ public class TestDriver extends Application{
             	chooser.getExtensionFilters().addAll(
        		         new ExtensionFilter("Worksheets", "*.xlsx")
        		         );
-            	///*
             	chooser.setInitialFileName("Book1.xlsx");
                 File file = chooser.showSaveDialog(primaryStage);
                 ExcelController.write(file, effortArray, defectArray);
-                //System.out.println(file.getAbsolutePath());
-                //*/
-            	/*
-            	System.out.println(java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss")));
-            	System.out.println(java.time.LocalDate.now());
+            }
+        });
+        
+        getFile.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent event) {
+            	FileChooser chooser = new FileChooser();
+            	chooser.getExtensionFilters().addAll(
+       		         new ExtensionFilter("Worksheets", "*.xlsx")
+       		         );
+                File excelToRead = chooser.showOpenDialog(primaryStage);
+        		
+        		List<EffortLog> outputEffort = ExcelController.readEffortLogs(excelToRead);
+        		
+        		logNum.setText(Integer.toString(outputEffort.get(0).getNumber()));
+        		
+        		for(int i = 0; i < outputEffort.size(); i++)
+        		{
+        			System.out.println(outputEffort.get(i).toString());
+        		}
+        		
+        		List<DefectLog> outputDefect = ExcelController.readDefectLogs(excelToRead);
+        		
+        		for(int i = 0; i < outputDefect.size(); i++)
+        		{
+        			System.out.println(outputDefect.get(i).toString());
+        		}
+            }
+        });
+        
+        saveFile.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent event) {
+            	FileChooser chooser = new FileChooser();
+            	chooser.getExtensionFilters().addAll(
+       		         new ExtensionFilter("Worksheets", "*.xlsx")
+       		         );
                 File excelToRead = chooser.showOpenDialog(primaryStage);
         		
         		List<EffortLog> outputEffort = ExcelController.readEffortLogs(excelToRead);
@@ -108,16 +165,25 @@ public class TestDriver extends Application{
         		for(int i = 0; i < outputDefect.size(); i++)
         		{
         			System.out.println(outputDefect.get(i).toString());
-        		}*/
+        		}//*/
             }
         });
         
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        
+        //StackPane root = new StackPane();
+        //root.getChildren().add(newFile);
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
     }
 	
+	public static File chooseFile(Stage primaryStage) {
+		FileChooser chooser = new FileChooser();
+    	chooser.getExtensionFilters().addAll(
+		         new ExtensionFilter("Worksheets", "*.xlsx")
+		         );
+    	File excelToRead = chooser.showOpenDialog(primaryStage);
+    	return excelToRead;
+	}
 	
 	public static void main(String[] args) {
 		

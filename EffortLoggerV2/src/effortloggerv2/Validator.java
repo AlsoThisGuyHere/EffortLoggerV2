@@ -17,7 +17,7 @@ public class Validator {
 
 		final int MAX_TEXT_LENGTH = 200;
 		final int MIN_UNAME_LENGTH = 6;
-		final int MAX_UNAME_LENGTH = 16;
+		final int MAX_UNAME_LENGTH = 32;
 		final int MIN_PASS_LENGTH = 8;
 		final int MAX_PASS_LENGTH = 32;
 		
