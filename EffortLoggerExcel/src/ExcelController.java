@@ -275,11 +275,7 @@ public class ExcelController {
 		}
 	}
 	
-	
-	// Obsolete? Kept in case this is needed for later use
-	
-	// Saves an excel containing the Effort Log and Defect Log information given to it
-	public static void write(File file, List<EffortLog> effortLogs, List<DefectLog> defectLogs)			// changed to only take a file and two Lists
+	public static void write(File file, ArrayList<EffortLog> effortLogs, ArrayList<DefectLog> defectLogs)
 	{
 		try
 		{
@@ -289,18 +285,20 @@ public class ExcelController {
 			
 			setColumnWidths(sheet);
 			
-			firstRow(workbook, sheet, file.getName(), effortLogs.size(), defectLogs.size());
+			String filename = file.getName().substring(0, file.getName().indexOf('.'));
+			firstRow(workbook, sheet, filename, effortLogs.size(), defectLogs.size());
 			secondRow(workbook, sheet);
+			
 			int rows = effortLogs.size() > defectLogs.size() ? effortLogs.size() : defectLogs.size();
 			XSSFCellStyle styleCenter = (XSSFCellStyle) workbook.createCellStyle();
 			styleCenter.setAlignment(HorizontalAlignment.CENTER);
 			
 			for(int i = 0; i < rows; i++)
 			{
-				Row row = sheet.createRow(2+i);			// createRow uses a row index beginning at 0 (so 0 is row 1, 1 is row 2, etc.)
+				Row row = sheet.createRow(3+i);
 				if(i < effortLogs.size())
 				{
-					row.createCell(0).setCellValue(effortLogs.get(i).getNumber()); 
+					row.createCell(0).setCellValue(effortLogs.get(i).getNumber());
 					row.createCell(1).setCellValue(effortLogs.get(i).getDate());
 					row.createCell(2).setCellValue(effortLogs.get(i).getStart());
 					row.createCell(3).setCellValue(effortLogs.get(i).getStop());
@@ -329,8 +327,74 @@ public class ExcelController {
 				}
 			}
 			
+			FileOutputStream fos = new FileOutputStream(file);
+			workbook.write(fos);
+			workbook.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Saving failed.");
+			System.out.println(e.toString());
+		}
+	}
+	
+	
+	// Obsolete? Kept in case this is needed for later use
+	
+	// Saves an excel containing the Effort Log and Defect Log information given to it
+	public static void write(File directory, String fileName, EffortLog[] effortLogs, DefectLog[] defectLogs)
+	{
+		try
+		{
+			
+			Workbook workbook = new XSSFWorkbook();
+			Sheet sheet = workbook.createSheet();
+			
+			setColumnWidths(sheet);
+			
+			firstRow(workbook, sheet, fileName, effortLogs.length, defectLogs.length);
+			secondRow(workbook, sheet);
+			
+			int rows = effortLogs.length > defectLogs.length ? effortLogs.length : defectLogs.length;
+			XSSFCellStyle styleCenter = (XSSFCellStyle) workbook.createCellStyle();
+			styleCenter.setAlignment(HorizontalAlignment.CENTER);
+			
+			for(int i = 0; i < rows; i++)
+			{
+				Row row = sheet.createRow(3+i);
+				if(i < effortLogs.length)
+				{
+					row.createCell(0).setCellValue(effortLogs[i].getNumber());
+					row.createCell(1).setCellValue(effortLogs[i].getDate());
+					row.createCell(2).setCellValue(effortLogs[i].getStart());
+					row.createCell(3).setCellValue(effortLogs[i].getStop());
+					row.createCell(4).setCellValue(effortLogs[i].getTimeElapsed());
+					row.createCell(5).setCellValue(effortLogs[i].getLifeCycleStep());
+					row.createCell(6).setCellValue(effortLogs[i].getCategory());
+					row.createCell(7).setCellValue(effortLogs[i].getDelInt());
+					
+					row.getCell(0).setCellStyle(styleCenter);
+					row.getCell(1).setCellStyle(styleCenter);
+					row.getCell(2).setCellStyle(styleCenter);
+					row.getCell(3).setCellStyle(styleCenter);
+					row.getCell(4).setCellStyle(styleCenter);
+				}
+				
+				if(i < defectLogs.length)
+				{
+					row.createCell(9).setCellValue(defectLogs[i].getNumber());
+					row.createCell(10).setCellValue(defectLogs[i].getName());
+					row.createCell(11).setCellValue(defectLogs[i].getDetail());
+					row.createCell(12).setCellValue(defectLogs[i].getInjected());
+					row.createCell(13).setCellValue(defectLogs[i].getRemoved());
+					row.createCell(14).setCellValue(defectLogs[i].getCategory());
+					row.createCell(15).setCellValue(defectLogs[i].getStatus());
+					row.createCell(16).setCellValue(defectLogs[i].getFix());
+				}
+			}
+			
 			FileOutputStream fos =
-					new FileOutputStream(new File(file.getAbsolutePath()/* + "\\" + fileName + ".xlsx"*/));
+					new FileOutputStream(new File(directory.getAbsolutePath() + "\\" + fileName + ".xlsx"));
 			workbook.write(fos);
 			workbook.close();
 		}
