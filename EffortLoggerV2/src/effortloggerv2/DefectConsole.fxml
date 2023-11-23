@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -46,10 +47,6 @@
             </Text>
             <Button mnemonicParsing="false" onAction="#importProject" prefHeight="27.0" prefWidth="240.0" text="Import Project" textAlignment="CENTER" GridPane.halignment="CENTER" />
             <TextField fx:id="defectDetail" alignment="TOP_LEFT" maxWidth="500.0" prefHeight="70.0" prefWidth="200.0" promptText="Enter a description of the defect..." GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-            <ChoiceBox fx:id="defectSelector" prefWidth="150.0" GridPane.halignment="LEFT" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets left="20.0" />
-               </GridPane.margin></ChoiceBox>
             <Label fx:id="defectStatus" text="Closed" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <font>
                   <Font name="System Bold" size="13.0" />
@@ -57,12 +54,12 @@
                <GridPane.margin>
                   <Insets left="45.0" top="1.0" />
                </GridPane.margin></Label>
-            <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="165.0" text="Clear Defect Log" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+            <Button mnemonicParsing="false" onAction="#clearDefectLog" prefHeight="27.0" prefWidth="165.0" text="Clear Defect Log" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="165.0" text="Log a New Defect" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <Button mnemonicParsing="false" onAction="#addDefect" prefHeight="27.0" prefWidth="165.0" text="Log a New Defect" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
@@ -112,11 +109,6 @@
                   <Insets right="5.0" />
                </GridPane.margin>
             </ChoiceBox>
-            <ChoiceBox fx:id="defectFix" prefHeight="27.0" prefWidth="175.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
-               <GridPane.margin>
-                  <Insets right="5.0" />
-               </GridPane.margin>
-            </ChoiceBox>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Fix:" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets left="10.0" />
@@ -141,11 +133,6 @@
                   <Insets left="20.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="defectName" prefHeight="19.0" prefWidth="160.0" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets right="20.0" />
-               </GridPane.margin>
-            </Label>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status: " textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <font>
                   <Font name="System Bold" size="13.0" />
@@ -154,6 +141,21 @@
                   <Insets right="45.0" />
                </GridPane.margin>
             </Text>
+            <ComboBox fx:id="defectSelector" prefWidth="150.0" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets left="20.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <TextField fx:id="defectName" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="19.0" prefWidth="160.0" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets right="20.0" />
+               </GridPane.margin>
+            </TextField>
+            <ComboBox fx:id="defectFix" prefHeight="27.0" prefWidth="175.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </ComboBox>
          </children>
       </GridPane>
    </children>

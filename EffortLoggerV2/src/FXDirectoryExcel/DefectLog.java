@@ -10,6 +10,7 @@ public class DefectLog {
 	private String status;
 	private int fix;
 	
+	
 	public DefectLog()
 	{
 		setNumber(-1);
@@ -22,6 +23,17 @@ public class DefectLog {
 		setFix(-1);
 	}
 	
+	/**
+	 * Defect log entry for EffortLoggerV2.
+	 * @param number	Sequential number assigned to each defect.
+	 * @param name		Name of defect.
+	 * @param detail	Details about the defect.
+	 * @param injected	Stage when the defect was injected.
+	 * @param removed	Stage when the defect was removed
+	 * @param category	What kind of defect the current defect is.
+	 * @param status	Whether defect is open or closed.
+	 * @param fix		No idea.
+	 */
 	public DefectLog(int number, String name, String detail, String injected, String removed,
 						String category, String status, int fix)
 	{

@@ -90,10 +90,10 @@ public class MainLoginPage extends Application {
 					//taskPage.createPlanningPokerPage(primaryStage, true, signedUpUsers, user, tasks);	// doesn't preserve tasks if you try to log in with a different account or sign up, even if either process fails
 					try {																						// just for now
 						
-						FXMLLoader loader = new FXMLLoader(getClass().getResource("Console.fxml"));
+						FXMLLoader loader = new FXMLLoader(getClass().getResource("EffortConsole.fxml"));
 						Parent root = loader.load();
-						ConsoleController consoleController = loader.getController();
-						consoleController.keepUser(primaryStage, true, signedUpUsers, user, tasks);
+						EffortConsoleController consoleController = loader.getController();
+						consoleController.keepUser(primaryStage, true, signedUpUsers, user, tasks);	// remove tasks and signedUpUsers from this
 						Scene scene = new Scene(root,1280,720);
 						primaryStage.setScene(scene);
 						primaryStage.show();

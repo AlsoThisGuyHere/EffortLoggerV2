@@ -24,7 +24,7 @@ public class Validator {
 		//boolean result = true;
 		
 		//Pattern allowed_chars = Pattern.compile("[^\\p{Print}]");		// looks for any non-printable character (only supports ASCII)
-		Pattern allowed_chars = Pattern.compile("[^\\p{Alnum}-._\\x20]");// looks for anything not a letter, number, period, underscore, or space
+		Pattern allowed_chars = Pattern.compile("[\\{Print}]");// looks for anything not a letter, number, period, underscore, or space
 		Pattern chars = Pattern.compile("[\\p{Punct}]");
 		Pattern nums = Pattern.compile("[\\p{Digit}]");
 		Pattern alpha = Pattern.compile("[\\p{Alpha}]");
@@ -59,7 +59,7 @@ public class Validator {
 				else if (!alpha.matcher(data).find()) {return false;}									// check for letters
 				break;
 			default:
-				return true;
+				return false;
 				
 		}
 		
