@@ -43,7 +43,7 @@
             </Text>
             <Button mnemonicParsing="false" onAction="#importProject" text="Import Project" textAlignment="CENTER" GridPane.halignment="CENTER" />
             <Button mnemonicParsing="false" onAction="#createProject" text="Create New Project" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <TextField fx:id="projNameField" alignment="CENTER" maxWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <TextField fx:id="taskNameField" alignment="CENTER" maxWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
             <ChoiceBox fx:id="effortCategory" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
             <ChoiceBox fx:id="lifecycleStep" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <Label fx:id="taskName" text="Task Name" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
@@ -53,8 +53,9 @@
          </children>
       </GridPane>
       <Button fx:id="stopActivity" layoutX="680.0" layoutY="239.0" mnemonicParsing="false" onAction="#stopTimer" text="Stop Activity" />
-      <Button alignment="CENTER_RIGHT" layoutX="735.0" layoutY="450.0" mnemonicParsing="false" onAction="#logout" text="Log Out" />
-      <Button layoutX="479.0" layoutY="450.0" mnemonicParsing="false" onAction="#openDefectConsole" text="Defect Log Console" />
-      <Button layoutX="620.0" layoutY="450.0" mnemonicParsing="false" onAction="#openPlanningPoker" text="Planning Poker" />
+      <Button alignment="CENTER_RIGHT" layoutX="726.0" layoutY="490.0" mnemonicParsing="false" onAction="#logout" text="Log Out" />
+      <Button layoutX="661.0" layoutY="450.0" mnemonicParsing="false" onAction="#openDefectConsole" text="Defect Log Console" />
+      <Button layoutX="499.0" layoutY="490.0" mnemonicParsing="false" onAction="#openPlanningPoker" text="Planning Poker" />
+      <Button layoutX="499.0" layoutY="450.0" mnemonicParsing="false" onAction="#openEffortEditor" text="Effort Log Editor" />
    </children>
 </AnchorPane>

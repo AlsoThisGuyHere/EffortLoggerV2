@@ -111,6 +111,9 @@ public class DefectLog {
 		this.fix = fix;
 	}
 	
+	/**
+	 * Returns a String representation of the defect entry with fields separated by tabs.
+	 */
 	public String toString()
 	{
 		return number + "\t" + name + "\t" + detail  + "\t" + injected + "\t" + removed +

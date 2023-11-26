@@ -152,7 +152,7 @@ public class ExcelController {
 				Row row = sheet.getRow(2+i);
 				if (row == null) 
 					row = sheet.createRow(2+i);
-				row.createCell(0).setCellValue(effortLogs.get(i).getNumber());
+				row.createCell(0).setCellValue(i+1);//effortLogs.get(i).getNumber());
 				row.createCell(1).setCellValue(effortLogs.get(i).getDate());
 				row.createCell(2).setCellValue(effortLogs.get(i).getStart());
 				row.createCell(3).setCellValue(effortLogs.get(i).getStop());
@@ -248,7 +248,7 @@ public class ExcelController {
 				Row row = sheet.getRow(2+i);
 				if (row == null) 
 					row = sheet.createRow(2+i);
-				row.createCell(9).setCellValue(defectLogs.get(i).getNumber());
+				row.createCell(9).setCellValue(i+1);//defectLogs.get(i).getNumber());
 				row.createCell(10).setCellValue(defectLogs.get(i).getName());
 				row.createCell(11).setCellValue(defectLogs.get(i).getDetail());
 				row.createCell(12).setCellValue(defectLogs.get(i).getInjected());

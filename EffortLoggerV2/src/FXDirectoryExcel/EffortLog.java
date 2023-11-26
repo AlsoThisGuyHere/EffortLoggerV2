@@ -22,6 +22,17 @@ public class EffortLog {
 		delInt = null;
 	}
 	
+	/**
+	 * Effort log entry for EffortLoggerV2.
+	 * @param number		Sequential number assigned to each entry.
+	 * @param date			Date entry was registered.
+	 * @param start			Time task was started.
+	 * @param stop			Time task was stopped.
+	 * @param timeElapsed	Total time spent on task in minutes.
+	 * @param lifeCycleStep	Project life cycle stage this entry belongs to.
+	 * @param category		What kind of task this entry represents.
+	 * @param delInt		Name of the task/entry.
+	 */
 	public EffortLog(int number, String date, String start, String stop, double timeElapsed,
 						String lifeCycleStep, String category, String delInt)
 	{
@@ -84,6 +95,9 @@ public class EffortLog {
 		this.delInt = delInt;
 	}
 	
+	/**
+	 * Returns a String representation of the effort entry with fields separated by tabs.
+	 */
 	public String toString()
 	{
 		return number + "\t" + date + "\t" + start  + "\t" + stop + "\t" + timeElapsed +

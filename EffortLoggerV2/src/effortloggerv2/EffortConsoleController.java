@@ -55,7 +55,7 @@ public class EffortConsoleController implements Initializable{
 	@FXML
 	private Parent root;
 	@FXML
-	private TextField projNameField;
+	private TextField taskNameField;
 	@FXML
 	private Label taskName;
 	@FXML
@@ -110,14 +110,14 @@ public class EffortConsoleController implements Initializable{
 			alert.setTitle("Start Ignored");
 			alert.setContentText("The clock is already running.");
 			alert.show();
-		} else if (lifecycleStep.getValue() == null || effortCategory.getValue() == null || projNameField.getText() == null) {
+		} else if (lifecycleStep.getValue() == null || effortCategory.getValue() == null || taskNameField.getText() == null) {
 			alert.setTitle("Options left blank");
 			alert.setContentText("Log entry cannot contain blank fields.");
 			alert.show();
 		} else {
 			System.out.println("Start Time: " + java.time.LocalTime.now());
 			currLog = new EffortLog(effortInfo.size() + 1, java.time.LocalDate.now().toString(), java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss")).toString(),
-					"", -1, lifecycleStep.getValue(), effortCategory.getValue(), projNameField.getText());  // try "" instead of null
+					"", -1, lifecycleStep.getValue(), effortCategory.getValue(), taskNameField.getText());  // try "" instead of null
 			effortInfo.add(currLog);
 			ExcelController.write(projFile, (ArrayList<EffortLog>)effortInfo, (ArrayList<DefectLog>)defectInfo);
 			clockIsRunning = true;
@@ -127,6 +127,8 @@ public class EffortConsoleController implements Initializable{
 	/*******
 	 * 
 	 * This method sets the stop time of the latest log entry to localTime if timerRunning is true.
+	 * If the clock was started and stopped on different days, the most recent entry will record its stop time as midnight,
+	 * and a new log entry for the current day will be created.
 	 * 
 	 * @param event		This event reference is the activation of the "Stop Activity" button.
 	 */
@@ -137,12 +139,42 @@ public class EffortConsoleController implements Initializable{
 			alert.show();
 		} else {
 			System.out.println("Stop Time: " + java.time.LocalTime.now());
-			currLog.setStop(java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss")).toString());
-			currLog.setTimeElapsed(Duration.between(LocalTime.parse(currLog.getStart()), LocalTime.parse(currLog.getStop())).getSeconds() / 60.0);
+			if (!currLog.getDate().equals(java.time.LocalDate.now().toString())) {
+				currLog.setStop("23:59:59");
+				currLog.setTimeElapsed(Duration.between(LocalTime.parse(currLog.getStart()), LocalTime.parse(currLog.getStop())).getSeconds() / 60.0);
+				currLog = new EffortLog(effortInfo.size() + 1, java.time.LocalDate.now().toString(), "00:00:00",
+						java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss")).toString(), 
+						Duration.between(LocalTime.parse("00:00:00"), java.time.LocalTime.now()).getSeconds() / 60.0, 
+						currLog.getLifeCycleStep(), currLog.getCategory(), currLog.getDelInt());
+				effortInfo.add(currLog);
+			} else {
+				currLog.setStop(java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss")).toString());
+				currLog.setTimeElapsed(Duration.between(LocalTime.parse(currLog.getStart()), LocalTime.parse(currLog.getStop())).getSeconds() / 60.0);
+			}
 			System.out.printf("Time elapsed: %.2f\n", currLog.getTimeElapsed());
 			//System.out.println("Time elapsed: " + Duration.between(LocalTime.parse(currLog.getStart()), LocalTime.parse(currLog.getStop())).getSeconds() / 60.0);
 			ExcelController.write(projFile, (ArrayList<EffortLog>)effortInfo, (ArrayList<DefectLog>)defectInfo);
 			clockIsRunning = false;
+		}
+	}
+	
+	/****
+	 * Switches the active scene to the effort editor.
+	 * 
+	 * @param event		This event references the activation of the "Switch to Effort Editor" button.
+	 */
+	public void openEffortEditor(ActionEvent event) {
+		try {														// do this any time you want to switch scenes
+			
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("EffortEditor.fxml"));
+			Parent root = loader.load();
+			EffortEditorController editorController = loader.getController();
+			editorController.keepUser(primaryStage, true, users, user, tasks);		// calls a method to carry over important data
+			Scene scene = new Scene(root,1280,720);
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
