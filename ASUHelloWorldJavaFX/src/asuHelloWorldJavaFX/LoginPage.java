@@ -26,13 +26,15 @@ public class LoginPage extends Application {
 	private SignupPage signupPage;
 	
 	private EffortLoggerPage taskPage;
+	
+	private ForgotPasswordScreen forgotPasswordScreen;
 
 	public static void main(String[] args) {
         launch(args);
     }
 	
 	public void start(Stage primaryStage) {
-		login(primaryStage, getUsersFromFile(), new ArrayList<Task>());
+		login(primaryStage, UtilityHelper.getUsersFromFile("src\\sample.txt"), new ArrayList<Task>());
 	}
     
     public void login(Stage primaryStage, List<User> signedUpUsers, List<Task> tasks) {
@@ -40,6 +42,7 @@ public class LoginPage extends Application {
     	System.out.println(tasks.size());
     	signupPage = new SignupPage();
     	taskPage = new EffortLoggerPage();
+    	forgotPasswordScreen = new ForgotPasswordScreen();
         primaryStage.setTitle("Effort Logger");
         
         Label username = new Label();
@@ -92,11 +95,20 @@ public class LoginPage extends Application {
 			}
 		});
         
+        Button forgotPasswordButton = new Button("Forgot Password?");
+        forgotPasswordButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				System.out.println("Forgot password");
+				forgotPasswordScreen.forgotPasswordScreen(primaryStage);
+			}
+		});
+        
         GridPane root = new GridPane();
         root.addRow(0, username, tfUsername);
         root.addRow(1, password, passwordField);
         root.addRow(2, btn, signupBtn);
-//        root.addRow(3, directAccessButton);
+        root.addRow(3, forgotPasswordButton);
         root.setAlignment(Pos.CENTER);
         
         primaryStage.setScene(new Scene(root, 400, 400));
@@ -109,18 +121,18 @@ public class LoginPage extends Application {
     			.findFirst();
     }
     
-    private List<User> getUsersFromFile() {
-    	List<User> users = new ArrayList<User>();
-    	ReadWrite readWrite = new ReadWrite("src\\sample.txt");
-    	String readData = readWrite.read();
-    	if (readData == null) return new ArrayList<User>();
-    	String[] stringUsers = readData.split("\n");
-    	for (int i = 0; i< stringUsers.length; i++) {
-    		System.out.println(stringUsers[i]);
-    		String[] splitUserDetails = stringUsers[i].split(" ");
-    		if (splitUserDetails.length != 8) continue;
-    		users.add(new User(splitUserDetails[0], splitUserDetails[1], splitUserDetails[2], splitUserDetails[3], splitUserDetails[4], splitUserDetails[5], splitUserDetails[6], splitUserDetails[7]));
-    	}
-    	return users;
-    }
+//    public List<User> getUsersFromFile() {
+//    	List<User> users = new ArrayList<User>();
+//    	ReadWrite readWrite = new ReadWrite("src\\sample.txt");
+//    	String readData = readWrite.read();
+//    	if (readData == null) return new ArrayList<User>();
+//    	String[] stringUsers = readData.split("\n");
+//    	for (int i = 0; i< stringUsers.length; i++) {
+//    		System.out.println(stringUsers[i]);
+//    		String[] splitUserDetails = stringUsers[i].split(" ");
+//    		if (splitUserDetails.length != 8) continue;
+//    		users.add(new User(splitUserDetails[0], splitUserDetails[1], splitUserDetails[2], splitUserDetails[3], splitUserDetails[4], splitUserDetails[5], splitUserDetails[6], splitUserDetails[7]));
+//    	}
+//    	return users;
+//    }
 }
