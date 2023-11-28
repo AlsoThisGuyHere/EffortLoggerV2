@@ -27,6 +27,7 @@ public class MainLoginPage extends Application {
 	private User loggedInUser;
 	
 	
+	
 	private SignupPage signupPage;
 	
 	private TaskPage taskPage;
