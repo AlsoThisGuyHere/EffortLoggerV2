@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 
 public class EffortConsoleController implements Initializable{
 	
+	
 	// user info
 	private User user;
 	private List<User> users;
@@ -204,17 +205,11 @@ public class EffortConsoleController implements Initializable{
 	 * @param event		This event references the activation of the "Switch to Planning Poker" button.
 	 */
 	public void openPlanningPoker(ActionEvent event) {
-		/*try {																		
-    		root = FXMLLoader.load(getClass().getResource("ProjectData.fxml"));			// for when we switch to only FXML files
-    		primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
-    		scene = new Scene(root);
-    		primaryStage.setScene(scene);
-    		primaryStage.show();
-    	}
-    	catch (Exception except) {
-    		except.printStackTrace();
-    	}*/
-		HistoricalData.ProjectDatFaPage(primaryStage, users, tasks, authenticationStatus, user);
+		System.out.println("Planning");
+		PlanningPokerPage planningPokerPage = new PlanningPokerPage();
+		planningPokerPage.createPlanningPokerPage(primaryStage);
+//		HistoricalData historicalData = new HistoricalData();
+//		historicalData.ProjectDataPage(primaryStage, users, tasks, authenticationStatus, user);
 	}
 	
 	// log out current user
