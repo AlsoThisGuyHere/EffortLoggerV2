@@ -26,27 +26,35 @@ public class MainLoginPage extends Application {
 	
 	private User loggedInUser;
 	
-	
 	private SignupPage signupPage;
 	
 	private TaskPage taskPage;
-	
-	private ForgotPasswordScreen forgotPasswordScreen;
 
 	public static void main(String[] args) {
         launch(args);
     }
 	
 	public void start(Stage primaryStage) {
-		login(primaryStage, UtilityHelper.getUsersFromFile("src\\sample.txt"), new ArrayList<Task>());			// get rid of tasks
+		login(primaryStage, getUsersFromFile(), new ArrayList<Task>());			// get rid of tasks
+		/*try {																	// for when we eventually use only FXML files
+			//BorderPane root = new BorderPane();
+			//Group root = new Group();
+			Parent root = FXMLLoader.load(getClass().getResource("MainLoginPage.fxml"));
+			Scene scene = new Scene(root,1280,720,Color.BLANCHEDALMOND);
+			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}*/
 	}
+    
 	
     public void login(Stage primaryStage, List<User> signedUpUsers, List<Task> tasks) {
     	System.out.println(signedUpUsers.size());
     	System.out.println(/*tasks.size()*/"tasks don't need to be here");
     	signupPage = new SignupPage();
     	taskPage = new TaskPage();
-    	forgotPasswordScreen = new ForgotPasswordScreen();
         primaryStage.setTitle("Effort Logger");
         
         Label username = new Label();
@@ -93,7 +101,6 @@ public class MainLoginPage extends Application {
 						e.printStackTrace();
 					}
 				}
-				
             }
         });
         
@@ -106,21 +113,19 @@ public class MainLoginPage extends Application {
 			}
 		});
         
-        Button forgotPasswordButton = new Button("Forgot Password?");
-        forgotPasswordButton.setOnAction(new EventHandler<ActionEvent>() {
+        Button directAccessButton = new Button("Direct Access");
+        directAccessButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent arg0) {
-				System.out.println("Forgot password");
-				forgotPasswordScreen.forgotPasswordScreen(primaryStage);
+			public void handle(ActionEvent actionEvent) {
+				taskPage.createPlanningPokerPage(primaryStage, false, signedUpUsers, null, tasks);
 			}
 		});
-        
         
         GridPane root = new GridPane();
         root.addRow(0, username, tfUsername);
         root.addRow(1, password, passwordField);
         root.addRow(2, btn, signupBtn);
-        root.addRow(3, forgotPasswordButton);
+        root.addRow(3, directAccessButton);
         root.setAlignment(Pos.CENTER);
         
         primaryStage.setScene(new Scene(root, 1280, 720));
@@ -131,5 +136,20 @@ public class MainLoginPage extends Application {
     	return users.stream()
     			.filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password))
     			.findFirst();
+    }
+    
+    private List<User> getUsersFromFile() {
+    	List<User> users = new ArrayList<User>();
+    	ReadWrite readWrite = new ReadWrite("src\\sample.txt");
+    	String readData = readWrite.read();
+    	if (readData == null) return new ArrayList<User>();
+    	String[] stringUsers = readData.split("\n");
+    	for (int i = 0; i< stringUsers.length; i++) {
+    		System.out.println(stringUsers[i]);
+    		String[] splitUserDetails = stringUsers[i].split(" ");
+    		if (splitUserDetails.length != 8) continue;
+    		users.add(new User(splitUserDetails[0], splitUserDetails[1], splitUserDetails[2], splitUserDetails[3], splitUserDetails[4], splitUserDetails[5], splitUserDetails[6], splitUserDetails[7]));
+    	}
+    	return users;
     }
 }
