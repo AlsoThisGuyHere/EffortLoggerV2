@@ -17,13 +17,16 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+//  @author Frans Emil Malapo
+//  Class to serve as the interface between EffortLogger and Excel document creation
+//  All methods are static so functionality is not dependent on object existence
 public class ExcelController {
 	
 	/**
 	 *  Outputs an array of Effort Logs read from the Excel file given in the argument.
 	 *   Excel file format must be exact in order for method to work.
-	 * @param file	The file to be read.
-	 * @return	A list of all effort logs found in the file.
+	 * @param	file	The file to be read.
+	 * @return		A list of all effort logs found in the file.
 	 */
 	public static ArrayList<EffortLog> readEffortLogs(File file)
 	{
@@ -64,8 +67,8 @@ public class ExcelController {
 	/**
 	 *  Outputs an array of Defect Logs read from the Excel file given in the argument.
 	 *   Excel file format must be exact in order for method to work.
-	 * @param file	The file to be read.
-	 * @return	A list of all defect logs found in the file.
+	 * @param 	file	The file to be read.
+	 * @return		A list of all defect logs found in the file.
 	 */
 	public static ArrayList<DefectLog> readDefectLogs(File file)
 	{
@@ -106,7 +109,7 @@ public class ExcelController {
 	
 	/**
 	 * Updates the effort log entries in a file.
-	 * @param 		file	The file being written to.
+	 * @param file		The file being written to.
 	 * @param effortLogs	An up-to-date list of effort logs to write.
 	 */
 	public static void writeEffortLog(File file, ArrayList<EffortLog> effortLogs)
@@ -190,7 +193,7 @@ public class ExcelController {
 	 * the workbook, delete the old file, then rename the temporary file to replace the old one. Using a FileOutputStream does not
 	 * require that workaround, but is more memory-intensive.
 	 * 
-	 * @param file			The file being written to.
+	 * @param file		The file being written to.
 	 * @param defectLogs	An up-to-date list of defect logs to write.
 	 */
 	public static void writeDefectLog(File file, ArrayList<DefectLog> defectLogs)
@@ -279,7 +282,7 @@ public class ExcelController {
 	 * This is also used to initialize a new file with no entries.
 	 * The project file is formatted to match the format of logs in EffortLoggerV1.
 	 * 
-	 * @param file			The file to replace the contents of.
+	 * @param file		The file to replace the contents of.
 	 * @param effortLogs	The list of effort logs to write.
 	 * @param defectLogs	The list of defect logs to write.
 	 */
@@ -348,15 +351,17 @@ public class ExcelController {
 	}
 	
 	
-	// Obsolete? Kept in case this is needed for later use
+	// ========Deprecated methods========
+	// Following methods are deprecated and are only kept for testing legacy versions
+	
 	/**
 	 * Replaces the contents of an existing project log with an updated list of all effort and defect logs. 
 	 * This method is deprecated. It is recommended to use the version that accepts ArrayLists as parameters.
 	 * 
 	 * @param directory		The directory of the file to replace the contents of.
 	 * @param fileName		The name of the file to replace the contents of.
-	 * @param effortLogs	The list of effort logs to write.
-	 * @param defectLogs	The list of defect logs to write.
+	 * @param effortLogs		The list of effort logs to write.
+	 * @param defectLogs		The list of defect logs to write.
 	 */
 	public static void write(File directory, String fileName, EffortLog[] effortLogs, DefectLog[] defectLogs)
 	{
@@ -448,8 +453,8 @@ public class ExcelController {
 	 * @param workbook		The workbook which changes are being applied to.
 	 * @param sheet			The sheet to format.
 	 * @param fileName		The name of the project file. This becomes part of the header.
-	 * @param effortEntries	The number of effort entries in the project file.
-	 * @param defectEntries	The number of defect entries in the project file.
+	 * @param effortEntries		The number of effort entries in the project file.
+	 * @param defectEntries		The number of defect entries in the project file.
 	 */
 	private static void firstRow(Workbook workbook, Sheet sheet, String fileName,
 									int effortEntries, int defectEntries)
