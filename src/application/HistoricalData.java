@@ -1,5 +1,5 @@
 package application;
-
+// importing useful java and javafx tools
 import java.util.List;
 
 import FXDirectoryExcel.ExcelData1;
@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.application.Application;
@@ -35,41 +36,25 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 // Author : Connor Ott
+// class containing various methods to implement historical data functionality into planning poker
 public class HistoricalData {
-	private EffortLoggerPage taskPage = new EffortLoggerPage();
-	
+	private EffortLoggerPage taskPage = new EffortLoggerPage(); // creating a new effortLogger page
+	private static int count = 0; // creating a count for enterExcel() and setting to 0
+	// method to display the project data page
 	public void ProjectDataPage(Stage primaryStage, List<User> users, List<Task> tasks, boolean checkAuthentication, User user) {
 		//GridPane gridPane = new GridPane();
-		table.setEditable(true);
-		
-		//Label taskLabel = new Label("Historical Data:");
-		TextField projectData = new TextField();
-		Alert error = new Alert(AlertType.ERROR);
-		
-		Button dataButton = new Button("Project Data");
-		dataButton.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent actionEvent) {
-            	if (checkTextInput(projectData.getText())) {
-                    error.setTitle("Please search for a project");
-                    error.setContentText("Please include the project name.");
-                    error.show();
-                    ProjectDataPage(primaryStage, users, tasks, checkAuthentication, user);
-            	} else {
-//            		tasks.add(projectData.getText());
-                    taskPage.createEffortLoggerPage(primaryStage, true, users, user, tasks);
-            	}
-            }  
-		}); 
+		table.setEditable(true); // making the table editable
+			
+			// creating a new scene and setting its title, height and width
 	        Scene scene = new Scene(new Group());
 	        primaryStage.setTitle("Viewing Historical Data");
 	        primaryStage.setWidth(450);
 	        primaryStage.setHeight(550);
-
+	        // creating a label for the scene and setting its font
 	        final Label label = new Label("Historical Data:");
 	        label.setFont(new Font("Arial", 20));
 	        
+	        // creating columns for the table
 	        TableColumn projectNameCol = new TableColumn("Project Name");
 	        projectNameCol.setMinWidth(100);
 	        projectNameCol.setCellValueFactory(
@@ -84,12 +69,13 @@ public class HistoricalData {
 	        numEntriesCol.setMinWidth(200);
 	        numEntriesCol.setCellValueFactory(
 	                new PropertyValueFactory<ProjectData, String>("numEntries"));
-
+	        
+	        // creating a filtered list to implement searching for historical data
 	        FilteredList<ProjectData> flProjectData = new FilteredList(data, p -> true);//Pass the data to a filtered list
 	        table.setItems(flProjectData);//Set the table's items using the filtered list
 	        table.getColumns().addAll(projectNameCol, projectDateCol, numEntriesCol);
 
-	        //Adding ChoiceBox and TextField here!
+	        //Adding ChoiceBox and TextField for the data list here!
 	        ChoiceBox<String> choiceBox = new ChoiceBox();
 	        choiceBox.getItems().addAll("Project Name", "Project Date", "Number of Entries");
 	        choiceBox.setValue("Project Name");
@@ -97,7 +83,7 @@ public class HistoricalData {
 	        TextField textField = new TextField();
 	        textField.setPromptText("Search here!");
 	        textField.textProperty().addListener((obs, oldValue, newValue) -> {
-	            switch (choiceBox.getValue())//Switch on choiceBox value
+	            switch (choiceBox.getValue())//Switch on choiceBox value so user can choose how they want to search the data
 	            {
 	                case "Project Name":
 	                    flProjectData.setPredicate(p -> p.getProjectName().toLowerCase().contains(newValue.toLowerCase().trim()));//filter table by first name
@@ -112,16 +98,16 @@ public class HistoricalData {
 	        });
 
 	        choiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal)
-	                -> {//reset table and textfield when new choice is selected
+	                -> {//resetting table and textfield when new choice is selected
 	            if (newVal != null) {
 	                textField.setText("");
 	            }
 	        });
-	        
+	        // creating a back button
 	        Button button = new Button("Back");
 	        button.setOnAction(new EventHandler<ActionEvent>() {
 				
-				@Override
+				@Override // going back to planning poker page when the back button is selected
 				public void handle(ActionEvent actionEvent) {
 					SinglePlayerPage singlePlayerPage = new SinglePlayerPage();
 					primaryStage.setTitle("Planning Poker");
@@ -130,8 +116,8 @@ public class HistoricalData {
 					singlePlayerPage.createSinglePlayerScreen(primaryStage);
 				}
 			});
-
-	        HBox hBox = new HBox(choiceBox, textField);//Add choiceBox and textField to hBox
+	        // creating new hbox and adjusting some box settings
+	        HBox hBox = new HBox(choiceBox, textField);//Adding choiceBox and textField to hBox
 	        hBox.setAlignment(Pos.CENTER);//Center HBox
 	        final VBox vbox = new VBox();
 	        vbox.setSpacing(5);
@@ -140,81 +126,89 @@ public class HistoricalData {
 
 	        ((Group) scene.getRoot()).getChildren().addAll(vbox);
 	        
-//	        Scene newScene = new Scene(vbox, 400, 400);
-	        
-
+	        // displaying the historical data and enterExcel screens
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
-	    
-}
-	
-
-	  private TableView<ProjectData> table = new TableView<ProjectData>();
-	  	private static final ObservableList<ProjectData> data
+	        enterExcel();
+	        
+	} 
+		// method to gather excel data and add it to the list
+		public static void enterExcel() {
+			// open new window asking user to give file path
+  		  TextField textField1 = new TextField();
+  	      Button button = new Button("Submit file path");
+  	      button.setTranslateX(250);
+  	      button.setTranslateY(100);
+  	      //Creating label
+  	      String fileForm = " C:\\Users\\user name\\file location\\file name(ending in .xlsx)";
+  	      Label label1 = new Label("Please enter a file path of the form" + fileForm);
+  	      Label label = new Label("File Path: ");
+  	      //Setting the message with read data
+  	      Text text = new Text("");
+  	      //Setting font to the label and changing some UI settings
+  	      Font font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10);
+  	      text.setFont(font);
+  	      text.setTranslateX(15);
+  	      text.setTranslateY(125);
+  	      text.setFill(Color.BROWN);
+  	      text.maxWidth(580);
+  	      text.setWrappingWidth(580);
+  	      button.setOnAction(e -> {
+  	         //Retrieving data
+  	         String path = textField1.getText(); // setting the file path to a String variable
+  	         System.out.println(path); // printing the path to console for testing purposes
+  	         if(path.contains(".xlsx")) {      	        	
+  	        	 count++; // incrementing count if user gives a proper excel file
+  	        	 String name = ExcelData1.getPName(path); // setting a name variable = to the value in excel
+  	        	 String date = ExcelData1.getPDate(path); // setting a data variable = to the value in excel
+  	        	 String entries = ExcelData1.getNEntries(path); // setting a entry variable = to the value in excel
+  	        	 data.add(new ProjectData(name, date, entries)); // adding the data to the historicaldata table
+  	        	 text.setText("Thank you for entering an excel file");   // message that prints to user
+  	         } else {
+  	        	 text.setText("Please enter a valid excel file path"); // message that prints to user
+  	         }
+  	      });
+  	      //Adding labels for nodes
+  	      VBox box = new VBox(5);
+  	      box.setPadding(new Insets(25, 5 , 5, 50));
+  	      box.getChildren().addAll(label1, label, textField1);
+  	      Group root = new Group(box, button, text);
+  	      //Setting the stage
+  	      Stage stage = new Stage();
+  	      Scene scene = new Scene(root, 595, 150, Color.BEIGE);
+  	      stage.setTitle("Add addtional excel files for Historical Data Analysis");
+  	      stage.setScene(scene);
+  	      stage.show();
+		}
+		// constructing a new table containing sample excel data as well as data added by the user in the enterExcel method
+	  public static TableView<ProjectData> table = new TableView<ProjectData>();
+	  	public static ObservableList<ProjectData> data
 	            = FXCollections.observableArrayList(
-	                new ProjectData(ExcelData1.getPName("C:\\Users\\Connor Ott\\Downloads\\workaroundTest.xlsx"), ExcelData1.getPDate("C:\\Users\\Connor Ott\\Downloads\\workaroundTest.xlsx"), ExcelData1.getNEntries("C:\\Users\\Connor Ott\\Downloads\\workaroundTest.xlsx")),
-	                new ProjectData()
-	            ); 
+	                new ProjectData("Sample Project", "11-29-2023", "1")
+	                // data from enterExcel() gets added through data.add as user inputs the file paths in the application
+	            		); 
+	  // creating a public project data class that is used to get and set the historical data values in the table          
 	  public static class ProjectData {
+		  	// initializing project name, date, and entry variables
 		  	private final SimpleStringProperty projectName = new SimpleStringProperty();
 	        private final SimpleStringProperty projectDate = new SimpleStringProperty();
 	        private final SimpleStringProperty numEntries = new SimpleStringProperty();
-	        
+	        // contructor method that sets the values
 	        private ProjectData(String pName, String pDate, String nEntries) {
 	        	this.projectName.setValue(pName);
 	            this.projectDate.setValue(pDate);
 	            this.numEntries.setValue(nEntries);
 	        }
-	        private ProjectData() {
-	        	if(data == null){
-	    	    	// open new window asking user to give file path
-	        		  TextField textField1 = new TextField();
-	        	      Button button = new Button("Submit file path");
-	        	      button.setTranslateX(250);
-	        	      button.setTranslateY(75);
-	        	      //Creating label
-	        	      Label label = new Label("File Path: ");
-	        	      //Setting the message with read data
-	        	      Text text = new Text("");
-	        	      //Setting font to the label
-	        	      Font font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 10);
-	        	      text.setFont(font);
-	        	      text.setTranslateX(15);
-	        	      text.setTranslateY(125);
-	        	      text.setFill(Color.BROWN);
-	        	      text.maxWidth(580);
-	        	      text.setWrappingWidth(580);
-	        	      //Displaying the message
-	        	      button.setOnAction(e -> {
-	        	         //Retrieving data
-	        	         String path = textField1.getText();
-	        	         if(path.contains(".xlsx")) {
-	        	        	 text.setText("Thank you for entering an excel file");
-	        	         } else {
-	        	        	 text.setText("Please enter a valid excel file path");
-	        	         }
-	        	      });
-	        	      //Adding labels for nodes
-	        	      HBox box = new HBox(5);
-	        	      box.setPadding(new Insets(25, 5 , 5, 50));
-	        	      box.getChildren().addAll(label, textField1);
-	        	      Group root = new Group(box, button, text);
-	        	      //Setting the stage
-	        	      Stage stage = new Stage();
-	        	      Scene scene = new Scene(root, 595, 150, Color.BEIGE);
-	        	      stage.setTitle("OPTIONAL: Add addtional excel files for Historical Data");
-	        	      stage.setScene(scene);
-	        	      stage.show();
-	    	    }
-			}
+	        // a bunch of getter and setter methods from 201-248
 			public String getProjectName()
-	        {
-	            return projectName.get();
+			{
+				return projectName.get();
 	        }
 
 	        public void setProjectName(String pName)
 	        {
-	           projectName.set(pName);
+	        	System.out.println(pName);
+	        	projectName.set(pName);
 	        }
 	        
 	        public SimpleStringProperty getProjectNameProperty()
@@ -227,9 +221,10 @@ public class HistoricalData {
 	            return projectDate.get();
 	        }
 
-	        public void setLastName(String pDate)
+	        public void setDate(String pDate)
 	        {
-	            projectDate.set(pDate);
+	            System.out.println(pDate);
+	        	projectDate.set(pDate);
 	        }
 
 	        public SimpleStringProperty getProjectDateProperty()
@@ -244,7 +239,8 @@ public class HistoricalData {
 
 	        public void setNumEntries(String nEntries)
 	        {
-	            numEntries.set(nEntries);
+	            System.out.println(nEntries);
+	        	numEntries.set(nEntries);
 	        }
 	        
 	        public SimpleStringProperty getnumEntriesProperty()
@@ -252,7 +248,7 @@ public class HistoricalData {
 	            return numEntries;
 	        }
 	    }
-	  
+	  	// input to check text input as needed
 		 private boolean checkTextInput(String value) {
 	        return value == null || value.isBlank() || value.isEmpty();
 	    } 
