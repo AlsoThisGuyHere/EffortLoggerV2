@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 // Hasan Shahid
 public class PlanningPokerPage {
 	
+	// Method to show screen to allow users to select the mode for the planning poker tool
 	public void createPlanningPokerPage(Stage primaryStage) {
 		System.out.println("Single Player");
 		SinglePlayerPage singlePlayerPage = new SinglePlayerPage();

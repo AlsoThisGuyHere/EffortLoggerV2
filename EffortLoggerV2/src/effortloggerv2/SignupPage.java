@@ -28,6 +28,7 @@ public class SignupPage {
 	private String selectedQuestion2;
 	private String selectedQuestion3;
 	
+	// Method to authorize new users to the system
 	public void createSignUpPage(Stage primaryStage, List<User> users) {
     	GridPane gridPane = new GridPane();
     	

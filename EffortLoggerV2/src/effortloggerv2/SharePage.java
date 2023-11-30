@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 // Hasan Shahid
 public class SharePage {
 	
+	// Method to allow users to share the estimated tasks with the team members and managers
 	public void sharePage(List<PlanningPoker> planningPoker) {
 		List<Task> tasks = new ArrayList<Task>();
 		tasks.add(new Task("Some task name", "2"));

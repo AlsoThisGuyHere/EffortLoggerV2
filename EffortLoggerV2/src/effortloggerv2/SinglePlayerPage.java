@@ -30,6 +30,7 @@ public class SinglePlayerPage {
 	
 	ReadWrite readWrite = new ReadWrite("src\\task.txt");
 
+	// Method to show single player screen for users to add estimates
 	public void createSinglePlayerScreen(Stage primaryStage) {
 		GridPane gridPane = new GridPane();
 		
