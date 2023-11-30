@@ -103,5 +103,4 @@ public class EffortLog {
 		return number + "\t" + date + "\t" + start  + "\t" + stop + "\t" + timeElapsed +
 				"\t" + lifeCycleStep + "\t" + category + "\t" + delInt;
 	}
-	
 }
