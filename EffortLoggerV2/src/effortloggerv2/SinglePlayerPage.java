@@ -6,7 +6,9 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -31,7 +33,7 @@ public class SinglePlayerPage {
 	ReadWrite readWrite = new ReadWrite("src\\task.txt");
 
 	// Method to show single player screen for users to add estimates
-	public void createSinglePlayerScreen(Stage primaryStage) {
+	public void createSinglePlayerScreen(Stage primaryStage, User user, List<User> users, boolean authenticationStatus) {
 		GridPane gridPane = new GridPane();
 		
 		gridPane.setHgap(0.1);
@@ -56,6 +58,7 @@ public class SinglePlayerPage {
     	Button searchHistoricalDataButton = new Button("Search Historical Data");
     	Button saveButton = new Button("Save");
     	Button shareButton = new Button("Share");
+    	Button effortConsoleButton = new Button("Return to Effort Console");
     	
     	Alert alert = new Alert(AlertType.ERROR);
     	
@@ -88,7 +91,7 @@ public class SinglePlayerPage {
 			@Override
 			public void handle(ActionEvent actionEvent) {
 //				historicalDataPage.createSearchHistoricalPage();
-				historicalData.ProjectDataPage(primaryStage, null, null, false, null);
+				historicalData.ProjectDataPage(primaryStage, users, null, authenticationStatus, user);
 			}
 		});
     	
@@ -96,6 +99,25 @@ public class SinglePlayerPage {
 			@Override
 			public void handle(ActionEvent actionEvent) {
 				sharePage.sharePage(planningPoker);
+			}
+		});
+    	
+    	effortConsoleButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				try {																					
+					
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("EffortConsole.fxml"));
+					Parent root = loader.load();
+					EffortConsoleController consoleController = loader.getController();
+					consoleController.keepUser(primaryStage, authenticationStatus, users, user);
+					Scene scene = new Scene(root,1280,720);
+					primaryStage.setScene(scene);
+					primaryStage.show();
+				} catch(Exception e) {
+					System.out.println("Could not load scene EffortConsole.fxml");
+					e.printStackTrace();
+				}
 			}
 		});
     	
@@ -108,8 +130,9 @@ public class SinglePlayerPage {
     	gridPane.addRow(6, saveButton);
     	gridPane.addRow(7, searchHistoricalDataButton);
     	gridPane.addRow(8, shareButton);
+    	gridPane.addRow(9, effortConsoleButton);
     	
-    	primaryStage.setScene(new Scene(gridPane, 400, 400));
+    	primaryStage.setScene(new Scene(gridPane, 1280, 720));
     	primaryStage.show();
 	}
 	

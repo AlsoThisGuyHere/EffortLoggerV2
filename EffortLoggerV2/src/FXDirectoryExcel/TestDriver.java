@@ -111,7 +111,7 @@ public class TestDriver extends Application{
        		         );
             	chooser.setInitialFileName("Book1.xlsx");
                 File file = chooser.showSaveDialog(primaryStage);
-                ExcelController.write(file, effortArray, defectArray);
+                ExcelController.write(file, (ArrayList<EffortLog>)effortArray, (ArrayList<DefectLog>)defectArray);
             }
         });
         

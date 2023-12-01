@@ -18,7 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
  
@@ -29,8 +28,6 @@ public class MainLoginPage extends Application {
 	
 	private SignupPage signupPage;
 	
-	private TaskPage taskPage;
-	
 	private ForgotPasswordScreen forgotPasswordScreen;
 
 	public static void main(String[] args) {
@@ -38,14 +35,12 @@ public class MainLoginPage extends Application {
     }
 	
 	public void start(Stage primaryStage) {
-		login(primaryStage, UtilityHelper.getUsersFromFile("src\\sample.txt"), new ArrayList<Task>());			// get rid of tasks
+		login(primaryStage, UtilityHelper.getUsersFromFile("src\\sample.txt"));			// get rid of tasks
 	}
 	
-    public void login(Stage primaryStage, List<User> signedUpUsers, List<Task> tasks) {
+    public void login(Stage primaryStage, List<User> signedUpUsers) {
     	System.out.println(signedUpUsers.size());
-    	System.out.println(/*tasks.size()*/"tasks don't need to be here");
     	signupPage = new SignupPage();
-    	taskPage = new TaskPage();
     	forgotPasswordScreen = new ForgotPasswordScreen();
         primaryStage.setTitle("Effort Logger");
         
@@ -80,12 +75,11 @@ public class MainLoginPage extends Application {
 					loggedInUser = user;
 					loggedInUser.setIsLoggedIn(Boolean.TRUE);
 					//taskPage.createPlanningPokerPage(primaryStage, true, signedUpUsers, user, tasks);	// doesn't preserve tasks if you try to log in with a different account or sign up, even if either process fails
-					try {																						// just for now
-						
+					try {																						
 						FXMLLoader loader = new FXMLLoader(getClass().getResource("EffortConsole.fxml"));
 						Parent root = loader.load();
 						EffortConsoleController consoleController = loader.getController();
-						consoleController.keepUser(primaryStage, true, signedUpUsers, user, tasks);	// remove tasks and signedUpUsers from this
+						consoleController.keepUser(primaryStage, true, signedUpUsers, user);	// remove tasks and signedUpUsers from this
 						Scene scene = new Scene(root,1280,720);
 						primaryStage.setScene(scene);
 						primaryStage.show();

@@ -86,7 +86,7 @@ public class ForgotPasswordScreen {
     	backToLoginButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent actionEvent) {
-				loginPage.login(primaryStage, UtilityHelper.getUsersFromFile("src\\sample.txt"), new ArrayList<Task>());
+				loginPage.login(primaryStage, UtilityHelper.getUsersFromFile("src\\sample.txt"));
 			}
 		});
     	

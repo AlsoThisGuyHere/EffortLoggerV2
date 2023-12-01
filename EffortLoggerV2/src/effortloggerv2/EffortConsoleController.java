@@ -16,7 +16,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -38,7 +37,6 @@ public class EffortConsoleController implements Initializable{
 	private User user;
 	private List<User> users;
 	private boolean authenticationStatus;
-	private List<Task> tasks;			// purely here for compatibility while I get this working
 	
 	// file stuff
 	private File projFile;
@@ -84,21 +82,13 @@ public class EffortConsoleController implements Initializable{
 		user = loggedInUser;
 		authenticationStatus = authenticationCheck;
 		this.users = users;
-		tasks = new ArrayList<Task>();			// purely here for compatibility
-		this.primaryStage = primaryStage;
-	}
-	public void keepUser(Stage primaryStage, boolean authenticationCheck, List<User> users, User loggedInUser, List<Task> tasks) {
-		user = loggedInUser;
-		authenticationStatus = authenticationCheck;
-		this.users = users;
-		this.tasks = tasks;			// purely here for compatibility
 		this.primaryStage = primaryStage;
 	}
 	
 	
 	/**********
 	 * 
-	 * This method checks if all required fields are filled in, then creates a new log entry.
+	 * Checks if all required fields are filled in, then creates a new log entry with default values.
 	 * 
 	 * @param event		This event refers to the activation of the "Start Activity" button.
 	 */
@@ -127,7 +117,7 @@ public class EffortConsoleController implements Initializable{
 	
 	/*******
 	 * 
-	 * This method sets the stop time of the latest log entry to localTime if timerRunning is true.
+	 * Sets the stop time of the latest log entry to localTime if timerRunning is true.
 	 * If the clock was started and stopped on different days, the most recent entry will record its stop time as midnight,
 	 * and a new log entry for the current day will be created.
 	 * 
@@ -170,7 +160,7 @@ public class EffortConsoleController implements Initializable{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("EffortEditor.fxml"));
 			Parent root = loader.load();
 			EffortEditorController editorController = loader.getController();
-			editorController.keepUser(primaryStage, true, users, user, tasks);		// calls a method to carry over important data
+			editorController.keepUser(primaryStage, true, users, user);		// calls a method to carry over important data
 			Scene scene = new Scene(root,1280,720);
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -190,7 +180,7 @@ public class EffortConsoleController implements Initializable{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("DefectConsole.fxml"));
 			Parent root = loader.load();
 			DefectConsoleController consoleController = loader.getController();
-			consoleController.keepUser(primaryStage, true, users, user, tasks);		// calls a method to carry over important data
+			consoleController.keepUser(primaryStage, true, users, user);		// calls a method to carry over important data
 			Scene scene = new Scene(root,1280,720);
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -207,17 +197,21 @@ public class EffortConsoleController implements Initializable{
 	public void openPlanningPoker(ActionEvent event) {
 		System.out.println("Planning");
 		PlanningPokerPage planningPokerPage = new PlanningPokerPage();
-		planningPokerPage.createPlanningPokerPage(primaryStage);
+		planningPokerPage.createPlanningPokerPage(primaryStage, user, users, authenticationStatus);
 //		HistoricalData historicalData = new HistoricalData();
 //		historicalData.ProjectDataPage(primaryStage, users, tasks, authenticationStatus, user);
 	}
 	
 	// log out current user
+	/**
+	 * Log out current user and return to login page.
+	 * @param event		This event references the activation of the "Log Out" button.
+	 */
 	public void logout(ActionEvent event) {
 		System.out.println("logging out");
 		user = null;
 		/*try {																		
-    		root = FXMLLoader.load(getClass().getResource("MainLoginPage.fxml"));			// for when we switch to only FXML files
+    		root = FXMLLoader.load(getClass().getResource("MainLoginPage.fxml"));			// if we switch to only FXML files
     		primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
     		scene = new Scene(root);
     		primaryStage.setScene(scene);
@@ -226,14 +220,17 @@ public class EffortConsoleController implements Initializable{
     	catch (Exception except) {
     		except.printStackTrace();
     	}*/
-		main.login(primaryStage, users, tasks);
+		main.login(primaryStage, users);
 	}
 	
 	
 	
 	
 	
-	// make an Excel workbook for a new project
+	/**
+	 * Make an Excel workbook for a new project and fill in the heading.
+	 * @param event		This event references the activation of the "Create New Project" button.
+	 */
 	public void createProject (ActionEvent event) {
 		fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(
@@ -244,7 +241,6 @@ public class EffortConsoleController implements Initializable{
 		if (projFile == null) {
 			System.out.println("No file was chosen by user.");
 		} else {
-			//ExcelCreator.createExcel(projFile);
 			ExcelController.write(projFile, new ArrayList<EffortLog>(), new ArrayList<DefectLog>());
 			currLog = new EffortLog();	// redundant
 			clockIsRunning = false;
@@ -294,7 +290,10 @@ public class EffortConsoleController implements Initializable{
 		taskName.setText(category);
 	}
 	
-	// initializes the options in the choice boxes
+	/**
+	 * Initializes the options in the choice boxes
+	 * 
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		lifecycleStep.getItems().addAll(lifecycleSteps);

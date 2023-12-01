@@ -59,7 +59,7 @@ public class EffortLoggerPage {
     		alert.setTitle("Invalid Access");
     		alert.setContentText("User is not logged in");
     		alert.show();
-    		main.login(primaryStage, users, tasks);
+    		main.login(primaryStage, users);
     	}
     	else {
     		Rectangle rectangle = new Rectangle();
@@ -125,7 +125,7 @@ public class EffortLoggerPage {
 				@Override
 				public void handle(ActionEvent arg0) {					
 					user = null;
-					main.login(primaryStage, users, tasks);
+					main.login(primaryStage, users);
 				}
 			});
             
@@ -133,7 +133,7 @@ public class EffortLoggerPage {
 				
 				@Override
 				public void handle(ActionEvent actionEvent) {
-					planningPokerPage.createPlanningPokerPage(primaryStage);
+					planningPokerPage.createPlanningPokerPage(primaryStage, user, users, authenticationCheck);
 				}
 			});
         	

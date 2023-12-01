@@ -1,5 +1,7 @@
 package effortloggerv2;
 
+import java.util.List;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -12,7 +14,7 @@ import javafx.stage.Stage;
 public class PlanningPokerPage {
 	
 	// Method to show screen to allow users to select the mode for the planning poker tool
-	public void createPlanningPokerPage(Stage primaryStage) {
+	public void createPlanningPokerPage(Stage primaryStage, User user, List<User> users, boolean authenticationStatus) {
 		System.out.println("Single Player");
 		SinglePlayerPage singlePlayerPage = new SinglePlayerPage();
 		
@@ -27,13 +29,13 @@ public class PlanningPokerPage {
 			
 			@Override
 			public void handle(ActionEvent actionEvent) {
-				singlePlayerPage.createSinglePlayerScreen(primaryStage);
+				singlePlayerPage.createSinglePlayerScreen(primaryStage, user, users, authenticationStatus);
 			}
 		});
     	
     	gridPane.addRow(0, singlePlayerButton);
     	
-    	primaryStage.setScene(new Scene(gridPane, 400, 400));
+    	primaryStage.setScene(new Scene(gridPane, 1280, 720));
     	primaryStage.show();
 	}
 }

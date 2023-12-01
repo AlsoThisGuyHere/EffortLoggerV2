@@ -48,8 +48,8 @@ public class HistoricalData {
 			// creating a new scene and setting its title, height and width
 	        Scene scene = new Scene(new Group());
 	        primaryStage.setTitle("Viewing Historical Data");
-	        primaryStage.setWidth(450);
-	        primaryStage.setHeight(550);
+	        primaryStage.setWidth(1280);	// 450
+	        primaryStage.setHeight(720);	// 550
 	        // creating a label for the scene and setting its font
 	        final Label label = new Label("Historical Data:");
 	        label.setFont(new Font("Arial", 20));
@@ -111,9 +111,9 @@ public class HistoricalData {
 				public void handle(ActionEvent actionEvent) {
 					SinglePlayerPage singlePlayerPage = new SinglePlayerPage();
 					primaryStage.setTitle("Planning Poker");
-					primaryStage.setWidth(400);
-					primaryStage.setHeight(400);
-					singlePlayerPage.createSinglePlayerScreen(primaryStage);
+					primaryStage.setWidth(1280);
+					primaryStage.setHeight(720);
+					singlePlayerPage.createSinglePlayerScreen(primaryStage, user, users, checkAuthentication);
 				}
 			});
 	        // creating new hbox and adjusting some box settings

@@ -35,7 +35,6 @@ public class EffortEditorController implements Initializable{
 	private User user;
 	private List<User> users;
 	private boolean authenticationStatus;
-	private List<Task> tasks;			// purely here for compatibility while I get this working
 	
 	// file stuff
 	private File projFile;
@@ -83,14 +82,6 @@ public class EffortEditorController implements Initializable{
 		user = loggedInUser;
 		authenticationStatus = authenticationCheck;
 		this.users = users;
-		tasks = new ArrayList<Task>();			// purely here for compatibility
-		this.primaryStage = primaryStage;
-	}
-	public void keepUser(Stage primaryStage, boolean authenticationCheck, List<User> users, User loggedInUser, List<Task> tasks) {
-		user = loggedInUser;
-		authenticationStatus = authenticationCheck;
-		this.users = users;
-		this.tasks = tasks;			// purely here for compatibility
 		this.primaryStage = primaryStage;
 	}
 	
@@ -285,17 +276,23 @@ public class EffortEditorController implements Initializable{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("EffortConsole.fxml"));
 			Parent root = loader.load();
 			EffortConsoleController consoleController = loader.getController();
-			consoleController.keepUser(primaryStage, true, users, user, tasks);
+			consoleController.keepUser(primaryStage, true, users, user);
 			Scene scene = new Scene(root,1280,720);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
-			System.out.println("Could not load scene Console.fxml");
+			System.out.println("Could not load scene EffortConsole.fxml");
 			e.printStackTrace();
 		}
 	}
 	
 	
+	/**
+	 * Generates an Alert popup to warn the user of something.
+	 * @param alert		The Alert object used.
+	 * @param title		The title of the Alert window.
+	 * @param text		The alert text.
+	 */
 	private void errorAlert(Alert alert, String title, String text) {
 		alert.setTitle(title);
 		alert.setContentText(text);

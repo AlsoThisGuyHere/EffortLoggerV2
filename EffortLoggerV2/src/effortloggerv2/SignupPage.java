@@ -110,7 +110,7 @@ public class SignupPage {
     	loginButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent actionEvent) {
-				main.login(primaryStage, users, new ArrayList<Task>());
+				main.login(primaryStage, users);
 			}
 		});
     	
@@ -216,7 +216,7 @@ public class SignupPage {
 					user.setAnswer3(tfAnswer3.getText());
 					users.add(user);
 					readWrite.append(user.getFirstName() + " " + user.getLastName() + " " + user.getRole() + " " + user.getUsername() + " " + user.getPassword() + " " + user.getAnswer1() + " " + user.getAnswer2() + " " + user.getAnswer3(), true);
-					main.login(primaryStage, users, new ArrayList<Task>());
+					main.login(primaryStage, users);
 				}
 			}
 		});
@@ -226,7 +226,7 @@ public class SignupPage {
 		loginButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent actionEvent) {
-				main.login(primaryStage, users, new ArrayList<Task>());
+				main.login(primaryStage, users);
 			}
 		});
 		
